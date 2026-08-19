@@ -1,0 +1,20 @@
+{
+  "name": "transit-guide-backend",
+  "version": "0.1.0",
+  "description": "외국인 대중교통 안내 앱 - 역 좌표 조회 백엔드 (최단거리 역 계산 API)",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "iconv-lite": "^0.6.3"
+  }
+}

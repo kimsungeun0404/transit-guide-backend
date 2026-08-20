@@ -145,7 +145,9 @@ const ODSAY_LINE_PREFIX = /^(수도권|서울)\s*/;
 
 // ODsay 실제 응답 주의사항(문서 예시와 다름, 실제 호출로 확인함):
 // - lane은 객체가 아니라 배열이다 (sp.lane[0].name).
-// - door 필드에 추천 탑승 칸이 들어있다 (예: "6-1"). 없으면 문자열 "null"이 온다.
+// - door 필드에 추천 탑승 칸이 들어있다 (예: "6-1"). 없으면 문자열 "null"이 오는데,
+//   공항철도가 서울역에서 끝나는 구간처럼 일부 노선은 "0-0"으로 온다(둘 다 "추천 없음" 의미 —
+//   실제 칸 번호는 항상 1 이상이라 "0-0"은 유효한 값일 수 없다).
 // - 출발 구간엔 startExitNo(추천 승차 출구), 도착 구간엔 endExitNo(추천 하차 출구)가 붙는다.
 // - info.subwayTransitCount는 "환승 횟수"가 아니라 "이용한 지하철 편수"다.
 //   (1호선→3호선처럼 1번 환승해도 2가 찍힘) — 환승 횟수는 지하철 구간 수 - 1로 직접 계산해야 한다.
@@ -165,7 +167,7 @@ function normalizeOdsayPath(path) {
             endStation: sp.endName,
             stationCount: sp.stationCount,
             minutes: sp.sectionTime,
-            boardingCar: sp.door && sp.door !== "null" ? sp.door : undefined,
+            boardingCar: sp.door && sp.door !== "null" && sp.door !== "0-0" ? sp.door : undefined,
             startExitNo: sp.startExitNo || undefined,
             startExitLat: sp.startExitY || undefined,
             startExitLng: sp.startExitX || undefined,

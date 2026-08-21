@@ -226,13 +226,13 @@ async function fetchTransitRoute(slat, slng, dlat, dlng) {
       }
       if (errInfo?.code === "429") {
         console.warn("[route] ODsay 일일 호출 한도 초과");
-        return { available: false, reason: "ODsay 일일 호출 한도를 초과했어요. 잠시 후 다시 시도해주세요." };
+        return { available: false, reason: "ODsay 일일 호출 한도를 초과했어요. 잠시 후 다시 시도해주세요.", reasonCode: "ODSAY_QUOTA_EXCEEDED" };
       }
-      return { available: false, reason: errInfo?.msg || errInfo?.message || "ODsay 오류" };
+      return { available: false, reason: errInfo?.msg || errInfo?.message || "ODsay 오류", reasonCode: "ODSAY_ERROR" };
     }
     const paths = data.result?.path;
     if (!Array.isArray(paths) || paths.length === 0) {
-      return { available: false, reason: "검색 결과 없음" };
+      return { available: false, reason: "검색 결과 없음", reasonCode: "NO_ROUTE_FOUND" };
     }
 
     // OPT=0(추천경로)의 1순위를 그대로 쓴다 — ODsay가 이미 실제 소요시간 기준으로 정렬해서 주므로,
@@ -240,7 +240,7 @@ async function fetchTransitRoute(slat, slng, dlat, dlng) {
     return normalizeOdsayPath(paths[0]);
   } catch (err) {
     console.warn("[route] ODsay 호출 실패:", err.message);
-    return { available: false, reason: "조회 실패" };
+    return { available: false, reason: "조회 실패", reasonCode: "LOOKUP_FAILED" };
   }
 }
 

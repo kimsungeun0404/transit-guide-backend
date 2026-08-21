@@ -214,13 +214,20 @@ async function fetchTransitRoute(slat, slng, dlat, dlng) {
     const data = await res.json();
 
     if (data.error) {
+      // ODsay는 에러 응답 모양이 일정하지 않다 — 보통은 객체({code, msg})지만,
+      // 일일 호출 한도 초과(429) 같은 일부 에러는 배열([{code, message}])로 온다.
+      const errInfo = Array.isArray(data.error) ? data.error[0] : data.error;
       // -98: 출발지·도착지가 700m 이내 — 대중교통을 탈 필요가 없을 만큼 가깝다는 ODsay의 판단.
       // 이 경우 "경로 없음"이 아니라 "걸어가는 게 낫다"는 유용한 정보이므로 도보 시간을 계산해서 알려준다.
-      if (data.error.code === "-98") {
+      if (errInfo?.code === "-98") {
         const walkMeters = Math.round(haversineMeters(slat, slng, dlat, dlng));
         return { available: false, reason: "too_close", walkable: true, walkMeters, walkMinutes: Math.max(1, Math.round(walkMeters / 70)) };
       }
-      return { available: false, reason: data.error.msg || "ODsay 오류" };
+      if (errInfo?.code === "429") {
+        console.warn("[route] ODsay 일일 호출 한도 초과");
+        return { available: false, reason: "ODsay 일일 호출 한도를 초과했어요. 잠시 후 다시 시도해주세요." };
+      }
+      return { available: false, reason: errInfo?.msg || errInfo?.message || "ODsay 오류" };
     }
     const paths = data.result?.path;
     if (!Array.isArray(paths) || paths.length === 0) {

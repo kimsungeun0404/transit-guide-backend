@@ -1,0 +1,91 @@
+/**
+ * 경로 캐시(routeCache.json)를 조금씩 채워나가는 스크립트.
+ *
+ * ODsay 무료 요금제가 하루 30회 한도라, 인기 "출발역 → 목적지" 조합을 한 번에 다 채울 수 없다.
+ * 이 스크립트를 매일 실행하면, 아직 캐시에 없는 조합 중 우선순위가 높은 것부터
+ * MAX_CALLS_PER_RUN개만 채우고 멈춘다 — 나머지 할당량은 실제 사용자 트래픽을 위해 남겨둔다.
+ *
+ * 실행: node scripts/seedRouteCache.js
+ * (배포된 백엔드의 /api/route/transit을 그대로 호출해서 채우므로, ODsay 연동 로직을 중복 구현하지 않는다.)
+ */
+const fs = require("fs");
+const path = require("path");
+const { ORIGIN_STATIONS, DESTINATIONS } = require("../data/routeCacheTargets");
+
+const BACKEND_URL = process.env.BACKEND_URL || "https://transit-guide-backend.onrender.com";
+const CACHE_PATH = path.join(__dirname, "..", "data", "routeCache.json");
+const MAX_CALLS_PER_RUN = 20; // 하루 30회 중 20회만 쓰고, 나머지는 실제 사용자 트래픽용으로 남겨둔다
+
+function routeCacheKey(slat, slng, dlat, dlng) {
+  const round = (n) => Number(n).toFixed(6);
+  return `${round(slat)},${round(slng)},${round(dlat)},${round(dlng)}`;
+}
+
+// 캐시에 저장할 가치가 있는 "확정된" 응답인지 판단 — 할당량 초과·네트워크 실패 같은
+// 일시적 오류는 캐시하지 않는다(나중에 다시 시도해야 하므로).
+function isCacheworthy(result) {
+  if (result.available === true) return true;
+  if (result.available === false && result.walkable === true) return true;
+  return false;
+}
+
+async function main() {
+  let cache = {};
+  try {
+    cache = JSON.parse(fs.readFileSync(CACHE_PATH, "utf8"));
+  } catch (err) {
+    console.warn("기존 캐시 로드 실패, 빈 캐시로 시작:", err.message);
+  }
+
+  // 갈 때(역 → 관광지)뿐 아니라 올 때(관광지 → 역, "숙소로 돌아가기"에서 역을 숙소 지역의
+  // 대리 지점으로 사용)도 함께 채운다 — 왕복 다 캐싱해야 실제 사용 패턴을 커버한다.
+  const pending = [];
+  for (const dest of DESTINATIONS) {
+    for (const origin of ORIGIN_STATIONS) {
+      const goKey = routeCacheKey(origin.lat, origin.lng, dest.lat, dest.lng);
+      if (!cache[goKey]) pending.push({ key: goKey, origin, dest, label: `${origin.name} → ${dest.name}` });
+
+      const backKey = routeCacheKey(dest.lat, dest.lng, origin.lat, origin.lng);
+      if (!cache[backKey]) pending.push({ key: backKey, origin: dest, dest: origin, label: `${dest.name} → ${origin.name}` });
+    }
+  }
+
+  const totalPairs = DESTINATIONS.length * ORIGIN_STATIONS.length * 2;
+  console.log(`전체 조합 ${totalPairs}개(왕복) 중 미완료 ${pending.length}개.`);
+
+  let filled = 0;
+  let skipped = 0;
+  for (const { key, origin, dest } of pending) {
+    if (filled >= MAX_CALLS_PER_RUN) {
+      console.log(`이번 실행 한도(${MAX_CALLS_PER_RUN}개) 도달, 여기서 멈춤.`);
+      break;
+    }
+
+    const url = `${BACKEND_URL}/api/route/transit?slat=${origin.lat}&slng=${origin.lng}&dlat=${dest.lat}&dlng=${dest.lng}`;
+    try {
+      const res = await fetch(url, { signal: AbortSignal.timeout(15000) });
+      const data = await res.json();
+
+      if (isCacheworthy(data)) {
+        cache[key] = data;
+        filled++;
+        console.log(`✓ ${origin.name} → ${dest.name}: 캐시 저장 (${data.available ? "경로 있음" : "도보 가능"})`);
+      } else {
+        skipped++;
+        console.log(`✗ ${origin.name} → ${dest.name}: 캐시 안 함 (${data.reason || "알 수 없음"})`);
+        if (data.reason && data.reason.includes("한도")) {
+          console.log("ODsay 일일 한도 초과로 보임 — 오늘은 여기서 중단.");
+          break;
+        }
+      }
+    } catch (err) {
+      console.warn(`✗ ${origin.name} → ${dest.name}: 호출 실패 (${err.message})`);
+      skipped++;
+    }
+  }
+
+  fs.writeFileSync(CACHE_PATH, JSON.stringify(cache, null, 2) + "\n");
+  console.log(`완료: 이번 실행에서 ${filled}개 채움, ${skipped}개 건너뜀. 남은 미완료: ${pending.length - filled}개.`);
+}
+
+main();

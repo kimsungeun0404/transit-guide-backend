@@ -23,6 +23,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "*";
 const CSV_PATH = path.join(__dirname, "data", "stations.csv");
+const ROUTE_CACHE_PATH = path.join(__dirname, "data", "routeCache.json");
 const REFRESH_INTERVAL_MS = 24 * 60 * 60 * 1000; // 24시간마다 갱신 시도 (분기별 갱신 데이터라 이 정도면 충분)
 
 app.use(cors({ origin: ALLOWED_ORIGIN }));
@@ -326,6 +327,22 @@ app.get("/api/stations/nearest", (req, res) => {
   res.json({ query: { lat, lng }, results: ranked, source: lastSource });
 });
 
+// ODsay 무료(Basic) 요금제가 하루 30회 한도라, 자주 조회되는 "출발역 → 목적지" 조합은
+// 미리 조회해서 backend/data/routeCache.json에 저장해두고 여기서 먼저 찾아본다.
+// scripts/seedRouteCache.js가 매일 이 캐시를 조금씩 채워나간다 — 자세한 내용은 그 파일 참고.
+// 캐시에 없는 조합만 그때 ODsay를 실시간으로 호출한다.
+let routeCache = {};
+try {
+  routeCache = JSON.parse(fs.readFileSync(ROUTE_CACHE_PATH, "utf8"));
+} catch (err) {
+  console.warn("[route] 경로 캐시 로드 실패, 빈 캐시로 시작:", err.message);
+}
+
+function routeCacheKey(slat, slng, dlat, dlng) {
+  const round = (n) => Number(n).toFixed(6);
+  return `${round(slat)},${round(slng)},${round(dlat)},${round(dlng)}`;
+}
+
 // 대중교통 경로 검색 — ODsay API 연동 (ODSAY_API_KEY 미설정 시 { available: false } 반환)
 // GET /api/route/transit?slat=&slng=&dlat=&dlng=
 app.get("/api/route/transit", async (req, res) => {
@@ -336,6 +353,12 @@ app.get("/api/route/transit", async (req, res) => {
 
   if (![slat, slng, dlat, dlng].every(Number.isFinite)) {
     return res.status(400).json({ error: "slat, slng, dlat, dlng 쿼리 파라미터가 필요합니다 (숫자)" });
+  }
+
+  const cacheKey = routeCacheKey(slat, slng, dlat, dlng);
+  const cached = routeCache[cacheKey];
+  if (cached) {
+    return res.json(cached);
   }
 
   const route = await fetchTransitRoute(slat, slng, dlat, dlng);

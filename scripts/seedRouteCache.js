@@ -10,7 +10,7 @@
  */
 const fs = require("fs");
 const path = require("path");
-const { ORIGIN_STATIONS, DESTINATIONS } = require("../data/routeCacheTargets");
+const { ORIGIN_STATIONS, DESTINATIONS, EXTRA_ORIGINS_FOR_DESTINATION } = require("../data/routeCacheTargets");
 
 const BACKEND_URL = process.env.BACKEND_URL || "https://transit-guide-backend.onrender.com";
 const CACHE_PATH = path.join(__dirname, "..", "data", "routeCache.json");
@@ -40,8 +40,13 @@ async function main() {
   // 갈 때(역 → 관광지)뿐 아니라 올 때(관광지 → 역, "숙소로 돌아가기"에서 역을 숙소 지역의
   // 대리 지점으로 사용)도 함께 채운다 — 왕복 다 캐싱해야 실제 사용 패턴을 커버한다.
   const pending = [];
+  let totalPairs = 0;
   for (const dest of DESTINATIONS) {
-    for (const origin of ORIGIN_STATIONS) {
+    // N서울타워처럼 버스가 꼭 필요한 목적지는 범용 8개 역 외에, 실제 버스를 탈 수 있는
+    // "관문역"들도 추가로 채운다 — 출발지 조합이 늘어나는 게 아니라 관문역 자체가 소수라 안전하다.
+    const origins = [...ORIGIN_STATIONS, ...(EXTRA_ORIGINS_FOR_DESTINATION[dest.name] || [])];
+    totalPairs += origins.length * 2;
+    for (const origin of origins) {
       const goKey = routeCacheKey(origin.lat, origin.lng, dest.lat, dest.lng);
       if (!cache[goKey]) pending.push({ key: goKey, origin, dest, label: `${origin.name} → ${dest.name}` });
 
@@ -50,8 +55,7 @@ async function main() {
     }
   }
 
-  const totalPairs = DESTINATIONS.length * ORIGIN_STATIONS.length * 2;
-  console.log(`전체 조합 ${totalPairs}개(왕복) 중 미완료 ${pending.length}개.`);
+  console.log(`전체 조합 ${totalPairs}개(왕복, 관문역 포함) 중 미완료 ${pending.length}개.`);
 
   let filled = 0;
   let skipped = 0;

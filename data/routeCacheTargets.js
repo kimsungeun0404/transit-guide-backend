@@ -39,4 +39,19 @@ const DESTINATIONS = [
   { name: "강남역", lat: 37.4979278, lng: 127.0275833 },
 ];
 
-module.exports = { ORIGIN_STATIONS, DESTINATIONS };
+// N서울타워처럼 지하철만으로는 못 가고 버스를 꼭 타야 하는 목적지는, 실제로는 남산 주변
+// "관문역" 몇 곳(충무로/회현/동대입구/서울역 등)에서만 버스를 탈 수 있다 — 즉 출발지가 어디든
+// 결국 이 몇 개 관문역 중 하나를 거치게 된다. 8개 범용 출발역 외에 이 관문역들도 추가로
+// 캐싱해두면, 실제 사용자가 남산 근처 어디서 출발하든(범용 8개 역에 없어도) 캐시에 걸릴
+// 확률이 크게 올라간다 — 반대로 "출발지 조합이 무한히 늘어나는" 문제는 안 생긴다(관문역 자체가
+// 몇 개 안 되니까).
+const EXTRA_ORIGINS_FOR_DESTINATION = {
+  N서울타워: [
+    { name: "충무로역", lat: 37.561302, lng: 126.995473 },
+    { name: "회현역", lat: 37.559698, lng: 126.979565 },
+    { name: "동대입구역", lat: 37.55816, lng: 127.005273 },
+    { name: "서울역", lat: 37.55315, lng: 126.972533 },
+  ],
+};
+
+module.exports = { ORIGIN_STATIONS, DESTINATIONS, EXTRA_ORIGINS_FOR_DESTINATION };

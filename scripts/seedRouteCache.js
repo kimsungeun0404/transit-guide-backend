@@ -10,7 +10,13 @@
  */
 const fs = require("fs");
 const path = require("path");
-const { ORIGIN_STATIONS, DESTINATIONS, EXTRA_ORIGINS_FOR_DESTINATION } = require("../data/routeCacheTargets");
+const {
+  ORIGIN_STATIONS,
+  DESTINATIONS,
+  EXTRA_ORIGINS_FOR_DESTINATION,
+  PRIORITY_AIRPORT_ORIGINS,
+  PRIORITY_AIRPORT_DESTINATIONS,
+} = require("../data/routeCacheTargets");
 
 const BACKEND_URL = process.env.BACKEND_URL || "https://transit-guide-backend.onrender.com";
 const CACHE_PATH = path.join(__dirname, "..", "data", "routeCache.json");
@@ -41,6 +47,20 @@ async function main() {
   // 대리 지점으로 사용)도 함께 채운다 — 왕복 다 캐싱해야 실제 사용 패턴을 커버한다.
   const pending = [];
   let totalPairs = 0;
+
+  // "공항 → 숙소" 조합이 다른 목록보다 검색 빈도가 높다고 판단해서 최우선으로 채운다 —
+  // pending 배열 맨 앞에 넣으면 MAX_CALLS_PER_RUN 한도 내에서 항상 먼저 처리된다.
+  for (const dest of PRIORITY_AIRPORT_DESTINATIONS) {
+    totalPairs += PRIORITY_AIRPORT_ORIGINS.length * 2;
+    for (const origin of PRIORITY_AIRPORT_ORIGINS) {
+      const goKey = routeCacheKey(origin.lat, origin.lng, dest.lat, dest.lng);
+      if (!cache[goKey]) pending.push({ key: goKey, origin, dest, label: `${origin.name} → ${dest.name}` });
+
+      const backKey = routeCacheKey(dest.lat, dest.lng, origin.lat, origin.lng);
+      if (!cache[backKey]) pending.push({ key: backKey, origin: dest, dest: origin, label: `${dest.name} → ${origin.name}` });
+    }
+  }
+
   for (const dest of DESTINATIONS) {
     // N서울타워처럼 버스가 꼭 필요한 목적지는 범용 8개 역 외에, 실제 버스를 탈 수 있는
     // "관문역"들도 추가로 채운다 — 출발지 조합이 늘어나는 게 아니라 관문역 자체가 소수라 안전하다.

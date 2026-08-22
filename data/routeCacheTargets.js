@@ -1,6 +1,30 @@
 // 사전 캐싱 대상 "출발역 × 목적지" 조합 목록.
 // 관광객이 실제로 묵을 가능성이 높은 지역의 역부터 우선순위를 두고, 나중에 점점 넓혀간다.
 // 좌표 출처: 역은 backend/data/stations.csv(공식 데이터), 목적지는 mobile-app/src/data/destinations.js와 동일.
+
+// "공항에서 숙소까지" 시나리오(AccommodationScreen)에서 가장 많이 검색될 조합 —
+// 다른 목록보다 먼저 채워야 해서 seedRouteCache.js가 이 목록을 최우선으로 처리한다.
+// 좌표 출처: 공항은 mobile-app/src/data/airports.js, 역은 stations.csv와 동일.
+const PRIORITY_AIRPORT_ORIGINS = [
+  { name: "인천공항 제1터미널역", lat: 37.44752854508576, lng: 126.45258454579164 },
+  { name: "인천공항 제2터미널역", lat: 37.46880112632082, lng: 126.43364314215901 },
+  { name: "김포공항역", lat: 37.56217, lng: 126.801273 },
+];
+
+const PRIORITY_AIRPORT_DESTINATIONS = [
+  { name: "서울역", lat: 37.55315, lng: 126.972533 },
+  { name: "명동역", lat: 37.561055, lng: 126.988271 },
+  { name: "을지로입구역", lat: 37.565998, lng: 126.982569 },
+  { name: "이태원역", lat: 37.534485, lng: 126.994369 },
+  { name: "합정역", lat: 37.550025, lng: 126.914557 },
+  { name: "홍대입구역", lat: 37.556748, lng: 126.923643 },
+  { name: "망원역", lat: 37.556031, lng: 126.910129 },
+  { name: "신촌역", lat: 37.555153, lng: 126.93689 },
+  { name: "성수역", lat: 37.544628, lng: 127.055983 },
+  { name: "강남역", lat: 37.497958, lng: 127.027539 },
+  { name: "잠실역", lat: 37.513305, lng: 127.100129 },
+];
+
 const ORIGIN_STATIONS = [
   { name: "명동역", lat: 37.561055, lng: 126.988271 },
   { name: "을지로3가역", lat: 37.566292, lng: 126.991773 },
@@ -54,4 +78,10 @@ const EXTRA_ORIGINS_FOR_DESTINATION = {
   ],
 };
 
-module.exports = { ORIGIN_STATIONS, DESTINATIONS, EXTRA_ORIGINS_FOR_DESTINATION };
+module.exports = {
+  ORIGIN_STATIONS,
+  DESTINATIONS,
+  EXTRA_ORIGINS_FOR_DESTINATION,
+  PRIORITY_AIRPORT_ORIGINS,
+  PRIORITY_AIRPORT_DESTINATIONS,
+};

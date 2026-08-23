@@ -292,7 +292,13 @@ async function resolveGoogleMapsLink(text) {
 // 순수 위도/경도 텍스트만 클립보드에 담긴다. 이미 정확한 좌표이므로 검색을 거칠 필요가 전혀
 // 없다 — 오인식 방지를 위해 대략 한국 영역(위도 33~39, 경도 124~132)인지만 확인한다.
 function parseRawCoordinates(text) {
-  const m = text.trim().match(/^(-?\d{1,2}\.\d+)\s*,\s*(-?\d{1,3}\.\d+)$/);
+  // 기기/지역 설정에 따라 도(°) 기호, N/E 표기, 특수 공백 문자가 섞여 나올 수 있어 먼저 정리한다.
+  const normalized = text
+    .replace(/[   ]/g, " ")
+    .replace(/[°º]/g, "")
+    .replace(/[NSEW]/gi, "")
+    .trim();
+  const m = normalized.match(/^(-?\d{1,2}\.\d+)\s*,\s*(-?\d{1,3}\.\d+)$/);
   if (!m) return null;
   const lat = parseFloat(m[1]);
   const lng = parseFloat(m[2]);
@@ -300,9 +306,9 @@ function parseRawCoordinates(text) {
   return { lat, lng };
 }
 
-async function searchAddressOSM(query) {
+async function geocodeOnceOSM(text) {
   const url =
-    `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}` +
+    `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(text)}` +
     `&format=jsonv2&countrycodes=kr&limit=1`;
   try {
     const res = await fetch(url, {
@@ -321,6 +327,25 @@ async function searchAddressOSM(query) {
     console.warn("[geocode] OSM 주소 검색 실패:", err.message);
     return null;
   }
+}
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// 국가명("South Korea")이나 우편번호("04334")처럼 예약 사이트 주소 끝에 붙는 조각이 있으면
+// Nominatim이 매칭에 실패하는 경우가 많다(실측 확인: "...Yongsan-gu, Seoul"까지는 성공하지만
+// "...Yongsan-gu, Seoul, South Korea, 04334"는 실패). 전체 문자열이 실패하면 쉼표 단위로
+// 뒤에서부터 한 조각씩 잘라내며 다시 시도한다 — 어떤 꼬리 부분이 문제인지 미리 알 필요가 없다.
+async function searchAddressOSM(query) {
+  const segments = query.split(",").map((s) => s.trim()).filter(Boolean);
+  const maxDrops = Math.min(3, segments.length - 1);
+  for (let drop = 0; drop <= maxDrops; drop++) {
+    const attempt = segments.slice(0, segments.length - drop).join(", ");
+    if (!attempt) break;
+    const result = await geocodeOnceOSM(attempt);
+    if (result) return result;
+    if (drop < maxDrops) await sleep(300); // Nominatim 이용 정책: 초당 1회 이하
+  }
+  return null;
 }
 
 async function searchPlaces(query) {

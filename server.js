@@ -274,6 +274,83 @@ async function fetchTransitRoute(slat, slng, dlat, dlng, preferSubway = false, d
   }
 }
 
+// 인천공항(제1/2터미널)은 행정구역상 인천이라 서울시 API의 지하철 네트워크에 아예 등록되어
+// 있지 않다(실측 확인: 이 좌표를 출발지로 넣으면 지하철 구간이 포함된 결과가 단 하나도 안 나옴,
+// 항상 서울 시내버스 기준 추정치라 비현실적인 버스 경로만 나온다 — 예: 50km를 16분).
+// 그래서 인천공항 출발만은 두 단계로 나눠서 계산한다:
+//   1) 공항철도(AREX)로 서울시 네트워크에 걸리는 5개 역(김포공항·디지털미디어시티·홍대입구·
+//      공덕·서울역) 중 하나까지 — 이 구간은 API로 조회가 안 되니 공식 시간표 기준 고정값을 쓴다.
+//   2) 그 역에서 목적지까지 — 이제 출발지가 서울시 네트워크 안이라 정상적으로 조회된다.
+// 목적지에 따라 어느 역에서 갈아타는 게 나은지 다르므로(홍대 근처는 홍대입구, 명동 근처는
+// 서울역 등), 목적지와 가까운 후보 두 곳만 실제로 조회해서 총 소요시간이 더 짧은 쪽을 쓴다
+// (5곳 전부 조회하면 API 호출량이 커진다 — 두 곳으로도 대부분의 목적지에 충분하다).
+// 소요시간 출처: 공항철도 공식 일반열차(완행) 시간표 — 서울역 기준 제1터미널 약 60분·
+// 제2터미널 약 66분이 공식 확인값이고, 중간역은 역간 소요시간(홍대입구 기준 ±3~16분)으로
+// 환산한 근사치다.
+// stationCount(정차역 수)는 인천공항1터미널역 기준 확인된 실측값(서울역행 12개 역, ODsay
+// 시절 캐시로 검증됨)에 노선도 순서(공항화물청사·운서·영종·청라국제도시·검암·계양·마곡나루
+// 순으로 각 역 하나씩)를 더해 역산했다. 제2터미널은 제1터미널보다 한 정거장 더 간다.
+const AREX_SEOUL_STOPS = [
+  { name: "김포공항", lat: 37.56217, lng: 126.801273, t1Min: 38, t2Min: 44, t1Count: 8, t2Count: 9 },
+  { name: "디지털미디어시티", lat: 37.577005, lng: 126.898643, t1Min: 49, t2Min: 55, t1Count: 9, t2Count: 10 },
+  { name: "홍대입구", lat: 37.556748, lng: 126.923643, t1Min: 53, t2Min: 59, t1Count: 10, t2Count: 11 },
+  { name: "공덕", lat: 37.544005, lng: 126.951058, t1Min: 56, t2Min: 62, t1Count: 11, t2Count: 12 },
+  { name: "서울역", lat: 37.55315, lng: 126.972533, t1Min: 60, t2Min: 66, t1Count: 12, t2Count: 13 },
+];
+
+async function fetchIncheonAirportRoute(terminal, dlat, dlng) {
+  const arexOriginName = terminal === "t2" ? "인천공항2터미널" : "인천공항1터미널";
+
+  const candidates = [...AREX_SEOUL_STOPS]
+    .sort((a, b) => haversineMeters(dlat, dlng, a.lat, a.lng) - haversineMeters(dlat, dlng, b.lat, b.lng))
+    .slice(0, 2);
+
+  const evaluated = await Promise.all(
+    candidates.map(async (stop) => {
+      const arexMinutes = terminal === "t2" ? stop.t2Min : stop.t1Min;
+      const cacheKey = routeCacheKey(stop.lat, stop.lng, dlat, dlng, true);
+      let sub = routeCache[cacheKey];
+      if (!sub) {
+        sub = await fetchTransitRoute(stop.lat, stop.lng, dlat, dlng, true);
+        if (sub.available) rememberRoute(cacheKey, sub);
+      }
+      const extraMinutes = sub.available ? sub.summary.totalTimeMin : sub.walkable ? sub.walkMinutes : null;
+      return { stop, arexMinutes, sub, totalMinutes: extraMinutes === null ? Infinity : arexMinutes + extraMinutes };
+    })
+  );
+
+  const best = evaluated.reduce((a, b) => (a.totalMinutes <= b.totalMinutes ? a : b));
+  if (best.totalMinutes === Infinity) {
+    // 후보 두 역 모두 조회 실패 — 마지막 대비책으로 공항 좌표에서 직접 조회한다(버스만 나오더라도
+    // 아예 안내가 없는 것보단 낫다).
+    const [airportLat, airportLng] =
+      terminal === "t2" ? [37.46880112632082, 126.43364314215901] : [37.44752854508576, 126.45258454579164];
+    return fetchTransitRoute(airportLat, airportLng, dlat, dlng, false);
+  }
+
+  const arexSegment = {
+    mode: "subway",
+    line: "공항철도",
+    startStation: arexOriginName,
+    endStation: best.stop.name,
+    stationCount: terminal === "t2" ? best.stop.t2Count : best.stop.t1Count,
+    minutes: best.arexMinutes,
+  };
+  const segments = [arexSegment, ...(best.sub.available ? best.sub.segments : [])];
+  const extraMinutes = best.sub.available ? best.sub.summary.totalTimeMin : best.sub.walkMinutes || 0;
+
+  return {
+    available: true,
+    summary: {
+      totalTimeMin: best.arexMinutes + extraMinutes,
+      transfers: best.sub.available ? best.sub.segments.length : 0,
+      fare: null,
+    },
+    segments,
+    source: "공항철도(AREX) 공식 시간표 + 서울시 대중교통환승경로 조회 서비스",
+  };
+}
+
 // ---------------------------------------------------------------------------
 // (선택) 카카오 로컬 검색 API 연동 — 주소/장소 이름으로 좌표 검색(지오코딩)
 // 숙소는 관광지와 달리 사용자마다 다른 곳이라 미리 좌표를 등록해둘 수 없다. 검색어(주소 또는
@@ -561,7 +638,7 @@ function rememberRoute(cacheKey, route) {
 }
 
 // 대중교통 경로 검색 — 서울시 대중교통환승경로 API 연동 (SEOUL_TRANSIT_API_KEY 미설정 시 { available: false } 반환)
-// GET /api/route/transit?slat=&slng=&dlat=&dlng=&preferSubway=1
+// GET /api/route/transit?slat=&slng=&dlat=&dlng=&preferSubway=1&arexOrigin=t1|t2
 app.get("/api/route/transit", async (req, res) => {
   const slat = parseFloat(req.query.slat);
   const slng = parseFloat(req.query.slng);
@@ -570,6 +647,9 @@ app.get("/api/route/transit", async (req, res) => {
   // 공항처럼 서울시 경계 밖에서 출발하는 화면(AccommodationScreen)만 이 플래그를 보낸다.
   const preferSubway = req.query.preferSubway === "1";
   const debug = req.query.debug === "1";
+  // 인천공항(제1/2터미널) 출발일 때만 보낸다 — 이 좌표는 서울시 API 네트워크 밖이라
+  // fetchIncheonAirportRoute()의 AREX+환승 2단계 계산으로 대신 처리해야 한다.
+  const arexOrigin = req.query.arexOrigin === "t2" ? "t2" : req.query.arexOrigin === "t1" ? "t1" : null;
 
   if (![slat, slng, dlat, dlng].every(Number.isFinite)) {
     return res.status(400).json({ error: "slat, slng, dlat, dlng 쿼리 파라미터가 필요합니다 (숫자)" });
@@ -580,13 +660,15 @@ app.get("/api/route/transit", async (req, res) => {
     return res.json(route);
   }
 
-  const cacheKey = routeCacheKey(slat, slng, dlat, dlng, preferSubway);
+  const cacheKey = arexOrigin ? `arex-${arexOrigin};${routeCacheKey(slat, slng, dlat, dlng)}` : routeCacheKey(slat, slng, dlat, dlng, preferSubway);
   const cached = routeCache[cacheKey];
   if (cached) {
     return res.json(cached);
   }
 
-  const route = await fetchTransitRoute(slat, slng, dlat, dlng, preferSubway);
+  const route = arexOrigin
+    ? await fetchIncheonAirportRoute(arexOrigin, dlat, dlng)
+    : await fetchTransitRoute(slat, slng, dlat, dlng, preferSubway);
   // 성공한 결과만 캐시에 넣는다 — 할당량 초과 등 일시적 실패를 "경로 없음"으로 굳혀버리면 안 된다.
   if (route.available) rememberRoute(cacheKey, route);
   res.json(route);

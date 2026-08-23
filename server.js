@@ -375,6 +375,28 @@ async function searchAddressOSM(query) {
   return null;
 }
 
+// "현재 위치를 숙소로 저장" 흐름은 좌표만 있고 사람이 읽을 이름이 없어 카드에 "내 숙소" 같은
+// 의미 없는 문구만 뜬다. Nominatim의 reverse 엔드포인트로 좌표를 실제 주소 문자열로 바꿔준다.
+async function reverseGeocodeOSM(lat, lng) {
+  const url =
+    `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}` +
+    `&format=jsonv2&zoom=18&addressdetails=0`;
+  try {
+    const res = await fetch(url, {
+      headers: {
+        "User-Agent": "SeoulTransitGuideApp/1.0 (+https://github.com/kimsungeun0404/transit-guide-app)",
+      },
+      signal: AbortSignal.timeout(6000),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.display_name || null;
+  } catch (err) {
+    console.warn("[geocode] OSM 역지오코딩 실패:", err.message);
+    return null;
+  }
+}
+
 async function searchPlaces(query) {
   const rawCoords = parseRawCoordinates(query);
   if (rawCoords) {
@@ -546,6 +568,16 @@ app.get("/api/geocode/search", async (req, res) => {
 
   const result = await searchPlaces(query);
   res.json(result);
+});
+
+app.get("/api/geocode/reverse", async (req, res) => {
+  const lat = parseFloat(req.query.lat);
+  const lng = parseFloat(req.query.lng);
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+    return res.status(400).json({ error: "lat, lng 쿼리 파라미터가 필요합니다" });
+  }
+  const address = await reverseGeocodeOSM(lat, lng);
+  res.json(address ? { available: true, address } : { available: false });
 });
 
 // 관리자용: 즉시 재갱신 트리거 (필요할 때만 사용)

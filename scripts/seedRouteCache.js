@@ -57,11 +57,13 @@ async function main() {
   for (const dest of PRIORITY_AIRPORT_DESTINATIONS) {
     totalPairs += PRIORITY_AIRPORT_ORIGINS.length * 2;
     for (const origin of PRIORITY_AIRPORT_ORIGINS) {
-      // 공항 출발 조합은 preferSubway=1로 채운다 — 이 API의 버스 소요시간 추정치가 서울시
-      // 경계 밖 장거리 구간(공항↔시내)에서 비현실적으로 짧게 나와, 그대로 두면 실제로는
-      // 훨씬 합리적인 공항철도(AREX) 대신 엉뚱한 버스 경로가 캐시에 굳어버린다(server.js 참고).
-      const goKey = routeCacheKey(origin.lat, origin.lng, dest.lat, dest.lng, true);
-      if (!cache[goKey]) pending.push({ key: goKey, origin, dest, preferSubway: true, label: `${origin.name} → ${dest.name}` });
+      // 인천공항(제1/2터미널)은 서울시 API의 지하철 네트워크 밖이라 arexOrigin으로 AREX+환승
+      // 2단계 계산을 시켜야 한다(server.js의 fetchIncheonAirportRoute 참고) — 그냥 preferSubway만
+      // 주면 지하철 후보 자체가 없어서 여전히 버스만 나온다. 김포공항은 서울시 소속이라 정상
+      // 조회되므로 preferSubway만으로 충분하다.
+      const arexOrigin = origin.name.includes("인천공항") ? (origin.name.includes("제2터미널") ? "t2" : "t1") : null;
+      const goKey = arexOrigin ? `arex-${arexOrigin};${routeCacheKey(origin.lat, origin.lng, dest.lat, dest.lng)}` : routeCacheKey(origin.lat, origin.lng, dest.lat, dest.lng, true);
+      if (!cache[goKey]) pending.push({ key: goKey, origin, dest, preferSubway: true, arexOrigin, label: `${origin.name} → ${dest.name}` });
 
       const backKey = routeCacheKey(dest.lat, dest.lng, origin.lat, origin.lng, true);
       if (!cache[backKey]) pending.push({ key: backKey, origin: dest, dest: origin, preferSubway: true, label: `${dest.name} → ${origin.name}` });
@@ -86,7 +88,7 @@ async function main() {
 
   let filled = 0;
   let skipped = 0;
-  for (const { key, origin, dest, preferSubway } of pending) {
+  for (const { key, origin, dest, preferSubway, arexOrigin } of pending) {
     if (filled >= MAX_CALLS_PER_RUN) {
       console.log(`이번 실행 한도(${MAX_CALLS_PER_RUN}개) 도달, 여기서 멈춤.`);
       break;
@@ -94,7 +96,8 @@ async function main() {
 
     const url =
       `${BACKEND_URL}/api/route/transit?slat=${origin.lat}&slng=${origin.lng}&dlat=${dest.lat}&dlng=${dest.lng}` +
-      (preferSubway ? "&preferSubway=1" : "");
+      (preferSubway ? "&preferSubway=1" : "") +
+      (arexOrigin ? `&arexOrigin=${arexOrigin}` : "");
     try {
       const res = await fetch(url, { signal: AbortSignal.timeout(15000) });
       const data = await res.json();

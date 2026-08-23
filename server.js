@@ -212,7 +212,7 @@ function normalizeSeoulPathList(pathList, totalTimeMin) {
   });
 }
 
-async function fetchTransitRoute(slat, slng, dlat, dlng) {
+async function fetchTransitRoute(slat, slng, dlat, dlng, preferSubway = false) {
   const apiKey = process.env.SEOUL_TRANSIT_API_KEY;
   if (!apiKey) return { available: false, reason: "SEOUL_TRANSIT_API_KEY 미설정" };
 
@@ -235,7 +235,12 @@ async function fetchTransitRoute(slat, slng, dlat, dlng) {
       return { available: false, reason: "검색 결과 없음", reasonCode: "NO_ROUTE_FOUND" };
     }
 
-    const best = allItems.reduce((a, b) => (Number(a.time) <= Number(b.time) ? a : b));
+    // 이 API의 버스 소요시간(item.time)은 서울 시내버스 기준 추정치라, 인천공항처럼 서울시
+    // 경계 밖에서 출발하는 장거리 구간에서는 터무니없이 짧게(예: 50km를 16분) 나오는 경우가
+    // 실측으로 확인됐다 — 그래서 "가장 빠른 경로"만 고르면 공항철도(AREX)가 있어도 무시되고
+    // 비현실적인 버스 경로가 뽑힌다. 공항 출발이면 최소 하나의 지하철 후보가 있는 한 그걸 쓴다.
+    const pool = preferSubway && subwayItems.length ? subwayItems : allItems;
+    const best = pool.reduce((a, b) => (Number(a.time) <= Number(b.time) ? a : b));
     const totalTimeMin = Number(best.time) || 0;
     const segments = normalizeSeoulPathList(best.pathList, totalTimeMin);
 
@@ -521,9 +526,10 @@ try {
   console.warn("[route] 경로 캐시 로드 실패, 빈 캐시로 시작:", err.message);
 }
 
-function routeCacheKey(slat, slng, dlat, dlng) {
+function routeCacheKey(slat, slng, dlat, dlng, preferSubway = false) {
   const round = (n) => Number(n).toFixed(4);
-  return `${round(slat)},${round(slng)},${round(dlat)},${round(dlng)}`;
+  const base = `${round(slat)},${round(slng)},${round(dlat)},${round(dlng)}`;
+  return preferSubway ? `${base};subway` : base;
 }
 
 function rememberRoute(cacheKey, route) {
@@ -537,24 +543,26 @@ function rememberRoute(cacheKey, route) {
 }
 
 // 대중교통 경로 검색 — 서울시 대중교통환승경로 API 연동 (SEOUL_TRANSIT_API_KEY 미설정 시 { available: false } 반환)
-// GET /api/route/transit?slat=&slng=&dlat=&dlng=
+// GET /api/route/transit?slat=&slng=&dlat=&dlng=&preferSubway=1
 app.get("/api/route/transit", async (req, res) => {
   const slat = parseFloat(req.query.slat);
   const slng = parseFloat(req.query.slng);
   const dlat = parseFloat(req.query.dlat);
   const dlng = parseFloat(req.query.dlng);
+  // 공항처럼 서울시 경계 밖에서 출발하는 화면(AccommodationScreen)만 이 플래그를 보낸다.
+  const preferSubway = req.query.preferSubway === "1";
 
   if (![slat, slng, dlat, dlng].every(Number.isFinite)) {
     return res.status(400).json({ error: "slat, slng, dlat, dlng 쿼리 파라미터가 필요합니다 (숫자)" });
   }
 
-  const cacheKey = routeCacheKey(slat, slng, dlat, dlng);
+  const cacheKey = routeCacheKey(slat, slng, dlat, dlng, preferSubway);
   const cached = routeCache[cacheKey];
   if (cached) {
     return res.json(cached);
   }
 
-  const route = await fetchTransitRoute(slat, slng, dlat, dlng);
+  const route = await fetchTransitRoute(slat, slng, dlat, dlng, preferSubway);
   // 성공한 결과만 캐시에 넣는다 — 할당량 초과 등 일시적 실패를 "경로 없음"으로 굳혀버리면 안 된다.
   if (route.available) rememberRoute(cacheKey, route);
   res.json(route);

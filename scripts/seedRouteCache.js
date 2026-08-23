@@ -25,9 +25,10 @@ const MAX_CALLS_PER_RUN = 20; // 하루 30회 중 20회만 쓰고, 나머지는 
 
 // server.js의 routeCacheKey()와 반드시 같은 반올림 자릿수를 써야 한다 — 다르면 이 스크립트가
 // 채워둔 항목과 실시간 조회가 서로 다른 키로 어긋나서 캐시가 전혀 안 맞게 된다.
-function routeCacheKey(slat, slng, dlat, dlng) {
+function routeCacheKey(slat, slng, dlat, dlng, preferSubway = false) {
   const round = (n) => Number(n).toFixed(4);
-  return `${round(slat)},${round(slng)},${round(dlat)},${round(dlng)}`;
+  const base = `${round(slat)},${round(slng)},${round(dlat)},${round(dlng)}`;
+  return preferSubway ? `${base};subway` : base;
 }
 
 // 캐시에 저장할 가치가 있는 "확정된" 응답인지 판단 — 할당량 초과·네트워크 실패 같은
@@ -56,11 +57,14 @@ async function main() {
   for (const dest of PRIORITY_AIRPORT_DESTINATIONS) {
     totalPairs += PRIORITY_AIRPORT_ORIGINS.length * 2;
     for (const origin of PRIORITY_AIRPORT_ORIGINS) {
-      const goKey = routeCacheKey(origin.lat, origin.lng, dest.lat, dest.lng);
-      if (!cache[goKey]) pending.push({ key: goKey, origin, dest, label: `${origin.name} → ${dest.name}` });
+      // 공항 출발 조합은 preferSubway=1로 채운다 — 이 API의 버스 소요시간 추정치가 서울시
+      // 경계 밖 장거리 구간(공항↔시내)에서 비현실적으로 짧게 나와, 그대로 두면 실제로는
+      // 훨씬 합리적인 공항철도(AREX) 대신 엉뚱한 버스 경로가 캐시에 굳어버린다(server.js 참고).
+      const goKey = routeCacheKey(origin.lat, origin.lng, dest.lat, dest.lng, true);
+      if (!cache[goKey]) pending.push({ key: goKey, origin, dest, preferSubway: true, label: `${origin.name} → ${dest.name}` });
 
-      const backKey = routeCacheKey(dest.lat, dest.lng, origin.lat, origin.lng);
-      if (!cache[backKey]) pending.push({ key: backKey, origin: dest, dest: origin, label: `${dest.name} → ${origin.name}` });
+      const backKey = routeCacheKey(dest.lat, dest.lng, origin.lat, origin.lng, true);
+      if (!cache[backKey]) pending.push({ key: backKey, origin: dest, dest: origin, preferSubway: true, label: `${dest.name} → ${origin.name}` });
     }
   }
 
@@ -82,13 +86,15 @@ async function main() {
 
   let filled = 0;
   let skipped = 0;
-  for (const { key, origin, dest } of pending) {
+  for (const { key, origin, dest, preferSubway } of pending) {
     if (filled >= MAX_CALLS_PER_RUN) {
       console.log(`이번 실행 한도(${MAX_CALLS_PER_RUN}개) 도달, 여기서 멈춤.`);
       break;
     }
 
-    const url = `${BACKEND_URL}/api/route/transit?slat=${origin.lat}&slng=${origin.lng}&dlat=${dest.lat}&dlng=${dest.lng}`;
+    const url =
+      `${BACKEND_URL}/api/route/transit?slat=${origin.lat}&slng=${origin.lng}&dlat=${dest.lat}&dlng=${dest.lng}` +
+      (preferSubway ? "&preferSubway=1" : "");
     try {
       const res = await fetch(url, { signal: AbortSignal.timeout(15000) });
       const data = await res.json();

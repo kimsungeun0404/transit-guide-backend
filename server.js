@@ -261,6 +261,33 @@ function isNonKorean(text) {
   return !/[가-힣]/.test(text);
 }
 
+// 예약 사이트의 "지도에서 보기"를 누르면 대부분 구글 지도로 연결되고, 구글 지도 앱의 "공유"
+// 버튼으로 정확한 GPS 좌표가 담긴 링크를 얻을 수 있다. 이 링크를 그대로 검색창에 붙여넣으면
+// 카카오/OSM 텍스트 검색을 거칠 필요 없이 좌표를 URL에서 직접 뽑아낼 수 있어 훨씬 정확하고,
+// 카카오 API 상태와도 무관하게 항상 동작한다. 단축 링크(maps.app.goo.gl 등)는 좌표가 URL에
+// 없으므로 리다이렉트를 따라가 실제 주소를 얻은 뒤 같은 방식으로 좌표를 뽑는다.
+async function resolveGoogleMapsLink(text) {
+  const urlMatch = text.match(/https?:\/\/(?:www\.)?(?:[a-z]+\.)?google\.[a-z.]+\/maps\S*|https?:\/\/maps\.app\.goo\.gl\/\S+|https?:\/\/goo\.gl\/maps\/\S+/i);
+  if (!urlMatch) return null;
+
+  let url = urlMatch[0];
+  try {
+    const res = await fetch(url, { redirect: "follow", signal: AbortSignal.timeout(6000) });
+    url = res.url || url;
+  } catch (err) {
+    console.warn("[geocode] 구글 지도 링크 해석 실패:", err.message);
+    return null;
+  }
+
+  const coordMatch = url.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/) || url.match(/[?&]q=(-?\d+\.\d+),(-?\d+\.\d+)/) || url.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/);
+  if (!coordMatch) return null;
+
+  const placeMatch = url.match(/\/place\/([^/@]+)/);
+  const name = placeMatch ? decodeURIComponent(placeMatch[1].replace(/\+/g, " ")) : null;
+
+  return { lat: parseFloat(coordMatch[1]), lng: parseFloat(coordMatch[2]), name };
+}
+
 async function searchAddressOSM(query) {
   const url =
     `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}` +
@@ -285,6 +312,15 @@ async function searchAddressOSM(query) {
 }
 
 async function searchPlaces(query) {
+  const mapsMatch = await resolveGoogleMapsLink(query);
+  if (mapsMatch) {
+    return {
+      available: true,
+      results: [{ name: mapsMatch.name || query, address: null, lat: mapsMatch.lat, lng: mapsMatch.lng, category: null }],
+      source: "구글 지도 링크",
+    };
+  }
+
   const apiKey = process.env.KAKAO_REST_API_KEY;
   if (!apiKey) return { available: false, reason: "KAKAO_REST_API_KEY 미설정" };
 

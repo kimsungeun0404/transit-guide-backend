@@ -252,6 +252,38 @@ async function fetchTransitRoute(slat, slng, dlat, dlng) {
 // "현재 위치를 숙소로 저장" 방식으로 대체 안내한다.
 // 키 발급: https://developers.kakao.com (회원가입 → 애플리케이션 추가 → REST API 키, 무료)
 // ---------------------------------------------------------------------------
+// 카카오 "키워드로 장소 검색"은 가게이름/카테고리 위주라, 해외 예약 사이트에서 그대로 복사해온
+// 정식 영문 주소("3-6, Hangang-daero 92-gil, Yongsan-gu, Seoul")를 넣으면 못 찾는 경우가 많다.
+// 이럴 때 OpenStreetMap(Nominatim)의 주소 검색으로 좌표만이라도 찾아본다 — 무료, 키 불필요.
+// 단, 실측 결과 한글 텍스트 검색은 Nominatim에서 엉뚱한 결과가 나올 수 있어(예: "경복궁"→검색 실패,
+// 무관한 지명 오매칭) 영문(비한글) 주소일 때만 이 폴백을 쓴다.
+function isNonKorean(text) {
+  return !/[가-힣]/.test(text);
+}
+
+async function searchAddressOSM(query) {
+  const url =
+    `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}` +
+    `&format=jsonv2&countrycodes=kr&limit=1`;
+  try {
+    const res = await fetch(url, {
+      headers: {
+        // Nominatim 이용 정책: 식별 가능한 User-Agent 필수
+        "User-Agent": "SeoulTransitGuideApp/1.0 (+https://github.com/kimsungeun0404/transit-guide-app)",
+      },
+      signal: AbortSignal.timeout(6000),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const item = data[0];
+    if (!item) return null;
+    return { lat: parseFloat(item.lat), lng: parseFloat(item.lon), displayName: item.display_name };
+  } catch (err) {
+    console.warn("[geocode] OSM 주소 검색 실패:", err.message);
+    return null;
+  }
+}
+
 async function searchPlaces(query) {
   const apiKey = process.env.KAKAO_REST_API_KEY;
   if (!apiKey) return { available: false, reason: "KAKAO_REST_API_KEY 미설정" };
@@ -276,6 +308,18 @@ async function searchPlaces(query) {
       lng: parseFloat(d.x),
       category: d.category_group_name || (d.category_name || "").split(" > ").pop() || null,
     }));
+
+    if (results.length === 0 && isNonKorean(query)) {
+      const osmMatch = await searchAddressOSM(query);
+      if (osmMatch) {
+        return {
+          available: true,
+          results: [{ name: query, address: osmMatch.displayName, lat: osmMatch.lat, lng: osmMatch.lng, category: null }],
+          source: "OpenStreetMap 주소 검색",
+        };
+      }
+    }
+
     return { available: true, results, source: "카카오 로컬 검색" };
   } catch (err) {
     console.warn("[geocode] 카카오 호출 실패:", err.message);

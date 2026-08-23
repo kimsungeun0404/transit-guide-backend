@@ -237,9 +237,13 @@ async function fetchTransitRoute(slat, slng, dlat, dlng, preferSubway = false, d
 
     // 이 API의 버스 소요시간(item.time)은 서울 시내버스 기준 추정치라, 인천공항처럼 서울시
     // 경계 밖에서 출발하는 장거리 구간에서는 터무니없이 짧게(예: 50km를 16분) 나오는 경우가
-    // 실측으로 확인됐다 — 그래서 "가장 빠른 경로"만 고르면 공항철도(AREX)가 있어도 무시되고
-    // 비현실적인 버스 경로가 뽑힌다. 공항 출발이면 최소 하나의 지하철 후보가 있는 한 그걸 쓴다.
-    const pool = preferSubway && subwayItems.length ? subwayItems : allItems;
+    // 실측으로 확인됐다 — 그래서 "가장 빠른 경로"만 고르면 지하철 구간이 있어도 무시되고
+    // 비현실적인 버스 경로가 뽑힌다. getPathInfoBySubway 전용 결과(subwayItems)는 실측상 거의
+    // 항상 비어 있어서(김포공항 출발도 마찬가지) 그것만 보면 안 되고, getPathInfoByBusNSub가
+    // 돌려주는 "혼합" 경로 중 지하철 구간을 하나라도 포함한 것까지 넓게 봐야 한다.
+    const hasSubwayLeg = (item) => (item.pathList || []).some((leg) => leg.railLinkList);
+    const subwayCapableItems = allItems.filter(hasSubwayLeg);
+    const pool = preferSubway && subwayCapableItems.length ? subwayCapableItems : allItems;
     const best = pool.reduce((a, b) => (Number(a.time) <= Number(b.time) ? a : b));
     const totalTimeMin = Number(best.time) || 0;
     const segments = normalizeSeoulPathList(best.pathList, totalTimeMin);
@@ -255,6 +259,7 @@ async function fetchTransitRoute(slat, slng, dlat, dlng, preferSubway = false, d
               subwayCount: subwayItems.length,
               busCount: busItems.length,
               mixedCount: mixedItems.length,
+              subwayCapableCount: subwayCapableItems.length,
               subwayBestTime: subwayItems.length ? Math.min(...subwayItems.map((p) => Number(p.time))) : null,
               busBestTime: busItems.length ? Math.min(...busItems.map((p) => Number(p.time))) : null,
               mixedBestTime: mixedItems.length ? Math.min(...mixedItems.map((p) => Number(p.time))) : null,

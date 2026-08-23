@@ -136,110 +136,117 @@ function haversineMeters(lat1, lng1, lat2, lng2) {
 }
 
 // ---------------------------------------------------------------------------
-// (선택) ODsay 대중교통 길찾기 API 연동
+// 서울시 대중교통환승경로 조회 서비스 연동 (공공데이터포털, data.go.kr)
 // 출발/도착 좌표만 주면 실제 지하철/버스 노선·환승·소요시간을 계산해준다.
-// .env에 ODSAY_API_KEY가 없으면 이 기능은 조용히 "unavailable"을 반환하고,
+// ODsay(무료 체험 6개월 한정)를 완전히 대체한다 — 이건 정부/서울시가 직접 운영하는
+// 상시 무료 오픈API로, 개발계정 기준 하루 1,000회(ODsay 30회의 30배 이상) 사용 가능하다.
+// .env에 SEOUL_TRANSIT_API_KEY가 없으면 이 기능은 조용히 "unavailable"을 반환하고,
 // 프론트엔드는 그 경우 발매기 위치처럼 답사 기반 안내로 대체한다.
-// 키 발급: https://lab.odsay.com (회원가입 → 애플리케이션 등록, 개인 Basic 요금제 무료)
+// 키 발급: https://www.data.go.kr → "서울특별시_대중교통환승경로 조회 서비스" 검색 →
+// 활용신청(4개 오퍼레이션 전부) → 승인 후 발급되는 인증키(Encoding) 그대로 사용.
+//
+// 실측으로 확인한 것 (문서에 없는 내용):
+// - 오퍼레이션 이름(getPathInfoByBusNSubList 등)과 실제 호출 경로가 다르다 —
+//   "List" 접미사를 뺀 getPathInfoBySubway / getPathInfoByBus / getPathInfoByBusNSub가
+//   진짜 엔드포인트다. 잘못된 이름으로 호출하면 "등록되지 않은 서비스키"라는, 원인을
+//   전혀 알 수 없는 오해의 소지가 큰 에러가 난다.
+// - 이름은 "버스지하철환승"(getPathInfoByBusNSub)이지만, 실제로는 지하철이 명백히 더
+//   나은 구간에서도 버스만 있는 경로만 줄 때가 있다(예: 서울역→강남역 실측 시 19개 결과
+//   전부 버스만 있었음). 그래서 이것 하나만 믿지 않고, 지하철 전용/버스 전용/환승 3개를
+//   전부 조회해서 그중 총 소요시간이 가장 짧은 걸 우리가 직접 골라 ODsay가 하던
+//   "가장 좋은 경로 하나 고르기"를 대신한다.
+// - 구간별 소요시간을 따로 안 주고 경로 전체 합계(time)만 준다 — 지하철 구간은
+//   railLinkList 길이(대략 정거장 수)로, 버스 구간은 균등하게 비례 배분해서 추정한다.
+// - ODsay가 주던 지하철 추천 승차 칸(boardingCar)·추천 승하차 출구 번호(exitNo)에
+//   해당하는 정보가 없다 — 프론트엔드는 이미 이 필드들이 없을 때를 조건부로 처리하므로
+//   화면이 깨지지는 않고, 그 부가 안내만 빠진다.
 // ---------------------------------------------------------------------------
-const ODSAY_LINE_PREFIX = /^(수도권|서울)\s*/;
+const SEOUL_TRANSIT_BASE = "http://ws.bus.go.kr/api/rest/pathinfo";
 
-// ODsay 실제 응답 주의사항(문서 예시와 다름, 실제 호출로 확인함):
-// - lane은 객체가 아니라 배열이다 (sp.lane[0].name).
-// - door 필드에 추천 탑승 칸이 들어있다 (예: "6-1"). 없으면 문자열 "null"이 오는데,
-//   공항철도가 서울역에서 끝나는 구간처럼 일부 노선은 "0-0"으로 온다(둘 다 "추천 없음" 의미 —
-//   실제 칸 번호는 항상 1 이상이라 "0-0"은 유효한 값일 수 없다).
-// - 출발 구간엔 startExitNo(추천 승차 출구), 도착 구간엔 endExitNo(추천 하차 출구)가 붙는다.
-// - info.subwayTransitCount는 "환승 횟수"가 아니라 "이용한 지하철 편수"다.
-//   (1호선→3호선처럼 1번 환승해도 2가 찍힘) — 환승 횟수는 지하철 구간 수 - 1로 직접 계산해야 한다.
-function normalizeOdsayPath(path) {
-  // 지하철(1)과 버스(2) 구간을 실제 탑승 순서 그대로 하나의 배열로 만든다. 남산 방면처럼
-  // 버스를 꼭 타야 하는 목적지도 있어서 버스 구간만 빼고 지하철만 보여주면 경로가 중간에
-  // 끊긴 것처럼 보인다 — 실제로 조회된 전체 구간(지하철+버스)을 그대로 안내해야 한다.
-  const segments = path.subPath
-    .filter((sp) => sp.trafficType === 1 || sp.trafficType === 2)
-    .map((sp) =>
-      sp.trafficType === 1
-        ? {
-            mode: "subway",
-            line: (sp.lane?.[0]?.name || "").replace(ODSAY_LINE_PREFIX, ""),
-            direction: sp.way || null,
-            startStation: sp.startName,
-            endStation: sp.endName,
-            stationCount: sp.stationCount,
-            minutes: sp.sectionTime,
-            boardingCar: sp.door && sp.door !== "null" && sp.door !== "0-0" ? sp.door : undefined,
-            startExitNo: sp.startExitNo || undefined,
-            startExitLat: sp.startExitY || undefined,
-            startExitLng: sp.startExitX || undefined,
-            endExitNo: sp.endExitNo || undefined,
-            endExitLat: sp.endExitY || undefined,
-            endExitLng: sp.endExitX || undefined,
-          }
-        : {
-            mode: "bus",
-            busNo: sp.lane?.[0]?.busNo || "",
-            startStation: sp.startName,
-            endStation: sp.endName,
-            stationCount: sp.stationCount,
-            minutes: sp.sectionTime,
-            startLat: sp.startY,
-            startLng: sp.startX,
-            endLat: sp.endY,
-            endLng: sp.endX,
-          }
-    );
-
-  return {
-    available: true,
-    summary: {
-      totalTimeMin: path.info.totalTime,
-      transfers: Math.max(0, segments.length - 1),
-      fare: path.info.payment,
-    },
-    segments,
-    source: "ODsay 대중교통 길찾기",
-  };
-}
-
-async function fetchTransitRoute(slat, slng, dlat, dlng) {
-  const apiKey = process.env.ODSAY_API_KEY;
-  if (!apiKey) return { available: false, reason: "ODSAY_API_KEY 미설정" };
-
+async function callSeoulTransitApi(operation, slat, slng, dlat, dlng) {
+  const apiKey = process.env.SEOUL_TRANSIT_API_KEY;
   const url =
-    `https://api.odsay.com/v1/api/searchPubTransPathT?SX=${slng}&SY=${slat}` +
-    `&EX=${dlng}&EY=${dlat}&OPT=0&SearchPathType=0&apiKey=${encodeURIComponent(apiKey)}`;
-
+    `${SEOUL_TRANSIT_BASE}/${operation}?serviceKey=${apiKey}` +
+    `&startX=${slng}&startY=${slat}&endX=${dlng}&endY=${dlat}&resultType=json`;
   try {
     const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
     const data = await res.json();
+    if (data?.msgHeader?.headerCd !== "0") return [];
+    return data?.msgBody?.itemList || [];
+  } catch (err) {
+    console.warn(`[route] 서울시 API(${operation}) 호출 실패:`, err.message);
+    return [];
+  }
+}
 
-    if (data.error) {
-      // ODsay는 에러 응답 모양이 일정하지 않다 — 보통은 객체({code, msg})지만,
-      // 일일 호출 한도 초과(429) 같은 일부 에러는 배열([{code, message}])로 온다.
-      const errInfo = Array.isArray(data.error) ? data.error[0] : data.error;
-      // -98: 출발지·도착지가 700m 이내 — 대중교통을 탈 필요가 없을 만큼 가깝다는 ODsay의 판단.
-      // 이 경우 "경로 없음"이 아니라 "걸어가는 게 낫다"는 유용한 정보이므로 도보 시간을 계산해서 알려준다.
-      if (errInfo?.code === "-98") {
-        const walkMeters = Math.round(haversineMeters(slat, slng, dlat, dlng));
-        return { available: false, reason: "too_close", walkable: true, walkMeters, walkMinutes: Math.max(1, Math.round(walkMeters / 70)) };
-      }
-      if (errInfo?.code === "429") {
-        console.warn("[route] ODsay 일일 호출 한도 초과");
-        return { available: false, reason: "ODsay 일일 호출 한도를 초과했어요. 잠시 후 다시 시도해주세요.", reasonCode: "ODSAY_QUOTA_EXCEEDED" };
-      }
-      return { available: false, reason: errInfo?.msg || errInfo?.message || "ODsay 오류", reasonCode: "ODSAY_ERROR" };
+function normalizeSeoulPathList(pathList, totalTimeMin) {
+  // railLinkList 길이(지하철 구간 수)나 1(버스 구간)을 가중치로 써서 전체 소요시간을
+  // 구간별로 비례 배분한다 — 이 API는 ODsay와 달리 구간별 소요시간을 따로 안 준다.
+  const weights = pathList.map((p) => (p.railLinkList ? p.railLinkList.length : 1));
+  const totalWeight = weights.reduce((a, b) => a + b, 0) || 1;
+  const stripStationSuffix = (name) => (name || "").replace(/역$/, "");
+
+  return pathList.map((p, idx) => {
+    const minutes = Math.max(1, Math.round((totalTimeMin * weights[idx]) / totalWeight));
+    if (p.railLinkList) {
+      return {
+        mode: "subway",
+        line: p.routeNm,
+        startStation: stripStationSuffix(p.fname),
+        endStation: stripStationSuffix(p.tname),
+        stationCount: p.railLinkList.length,
+        minutes,
+      };
     }
-    const paths = data.result?.path;
-    if (!Array.isArray(paths) || paths.length === 0) {
+    return {
+      mode: "bus",
+      busNo: p.routeNm,
+      startStation: p.fname,
+      endStation: p.tname,
+      minutes,
+      startLat: parseFloat(p.fy),
+      startLng: parseFloat(p.fx),
+      endLat: parseFloat(p.ty),
+      endLng: parseFloat(p.tx),
+    };
+  });
+}
+
+async function fetchTransitRoute(slat, slng, dlat, dlng) {
+  const apiKey = process.env.SEOUL_TRANSIT_API_KEY;
+  if (!apiKey) return { available: false, reason: "SEOUL_TRANSIT_API_KEY 미설정" };
+
+  // 출발지·도착지가 아주 가까우면(700m 이내) 대중교통을 탈 필요가 없다 — API 호출 자체를
+  // 생략하고(할당량 절약) 도보 시간을 바로 계산해서 알려준다.
+  const walkMeters = Math.round(haversineMeters(slat, slng, dlat, dlng));
+  if (walkMeters < 700) {
+    return { available: false, reason: "too_close", walkable: true, walkMeters, walkMinutes: Math.max(1, Math.round(walkMeters / 70)) };
+  }
+
+  try {
+    const [subwayItems, busItems, mixedItems] = await Promise.all([
+      callSeoulTransitApi("getPathInfoBySubway", slat, slng, dlat, dlng),
+      callSeoulTransitApi("getPathInfoByBus", slat, slng, dlat, dlng),
+      callSeoulTransitApi("getPathInfoByBusNSub", slat, slng, dlat, dlng),
+    ]);
+
+    const allItems = [...subwayItems, ...busItems, ...mixedItems];
+    if (allItems.length === 0) {
       return { available: false, reason: "검색 결과 없음", reasonCode: "NO_ROUTE_FOUND" };
     }
 
-    // OPT=0(추천경로)의 1순위를 그대로 쓴다 — ODsay가 이미 실제 소요시간 기준으로 정렬해서 주므로,
-    // 지하철만 있는 경로를 임의로 우선시키면 남산타워처럼 버스가 꼭 필요한 목적지의 실제 경로를 놓치게 된다.
-    return normalizeOdsayPath(paths[0]);
+    const best = allItems.reduce((a, b) => (Number(a.time) <= Number(b.time) ? a : b));
+    const totalTimeMin = Number(best.time) || 0;
+    const segments = normalizeSeoulPathList(best.pathList, totalTimeMin);
+
+    return {
+      available: true,
+      summary: { totalTimeMin, transfers: Math.max(0, segments.length - 1), fare: null },
+      segments,
+      source: "서울시 대중교통환승경로 조회 서비스",
+    };
   } catch (err) {
-    console.warn("[route] ODsay 호출 실패:", err.message);
+    console.warn("[route] 서울시 대중교통 API 호출 실패:", err.message);
     return { available: false, reason: "조회 실패", reasonCode: "LOOKUP_FAILED" };
   }
 }
@@ -473,10 +480,10 @@ app.get("/api/stations/nearest", (req, res) => {
   res.json({ query: { lat, lng }, results: ranked, source: lastSource });
 });
 
-// ODsay 무료(Basic) 요금제가 하루 30회 한도라, 자주 조회되는 "출발역 → 목적지" 조합은
-// 미리 조회해서 backend/data/routeCache.json에 저장해두고 여기서 먼저 찾아본다.
-// scripts/seedRouteCache.js가 매일 이 캐시를 조금씩 채워나간다 — 자세한 내용은 그 파일 참고.
-// 캐시에 없는 조합만 그때 ODsay를 실시간으로 호출한다.
+// 자주 조회되는 "출발역 → 목적지" 조합은 미리 조회해서 backend/data/routeCache.json에
+// 저장해두고 여기서 먼저 찾아본다 — 서울시 API 할당량(하루 1,000회)에 여유가 있긴 하지만
+// 응답 속도 자체도 캐시가 훨씬 빠르다. scripts/seedRouteCache.js가 매일 이 캐시를 조금씩
+// 채워나간다 — 자세한 내용은 그 파일 참고. 캐시에 없는 조합만 그때 실시간으로 호출한다.
 //
 // 이 사전 시딩은 "역↔관광지/공항"처럼 고정된 조합만 커버한다 — 숙소는 사용자가 주소로
 // 직접 검색해서 나오는 임의의 좌표라 애초에 미리 목록화할 수가 없다. 그래서 실시간 조회가
@@ -507,7 +514,7 @@ function rememberRoute(cacheKey, route) {
   }
 }
 
-// 대중교통 경로 검색 — ODsay API 연동 (ODSAY_API_KEY 미설정 시 { available: false } 반환)
+// 대중교통 경로 검색 — 서울시 대중교통환승경로 API 연동 (SEOUL_TRANSIT_API_KEY 미설정 시 { available: false } 반환)
 // GET /api/route/transit?slat=&slng=&dlat=&dlng=
 app.get("/api/route/transit", async (req, res) => {
   const slat = parseFloat(req.query.slat);

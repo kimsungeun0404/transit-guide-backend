@@ -1,12 +1,13 @@
 /**
  * 경로 캐시(routeCache.json)를 조금씩 채워나가는 스크립트.
  *
- * ODsay 무료 요금제가 하루 30회 한도라, 인기 "출발역 → 목적지" 조합을 한 번에 다 채울 수 없다.
+ * 서울시 대중교통환승경로 API는 하루 1,000회 한도라(이전 ODsay 30회보다 훨씬 넉넉하지만)
+ * 인기 "출발역 → 목적지" 조합을 매번 실시간으로 부르는 것보다 캐시가 더 빠르고 안전하다.
  * 이 스크립트를 매일 실행하면, 아직 캐시에 없는 조합 중 우선순위가 높은 것부터
  * MAX_CALLS_PER_RUN개만 채우고 멈춘다 — 나머지 할당량은 실제 사용자 트래픽을 위해 남겨둔다.
  *
  * 실행: node scripts/seedRouteCache.js
- * (배포된 백엔드의 /api/route/transit을 그대로 호출해서 채우므로, ODsay 연동 로직을 중복 구현하지 않는다.)
+ * (배포된 백엔드의 /api/route/transit을 그대로 호출해서 채우므로, API 연동 로직을 중복 구현하지 않는다.)
  */
 const fs = require("fs");
 const path = require("path");
@@ -100,7 +101,7 @@ async function main() {
         skipped++;
         console.log(`✗ ${origin.name} → ${dest.name}: 캐시 안 함 (${data.reason || "알 수 없음"})`);
         if (data.reason && data.reason.includes("한도")) {
-          console.log("ODsay 일일 한도 초과로 보임 — 오늘은 여기서 중단.");
+          console.log("일일 호출 한도 초과로 보임 — 오늘은 여기서 중단.");
           break;
         }
       }

@@ -288,6 +288,18 @@ async function resolveGoogleMapsLink(text) {
   return { lat: parseFloat(coordMatch[1]), lng: parseFloat(coordMatch[2]), name };
 }
 
+// 구글 지도에서 위치를 길게 눌러 "좌표 복사"를 하면 URL이 아니라 "37.5461, 126.9730" 같은
+// 순수 위도/경도 텍스트만 클립보드에 담긴다. 이미 정확한 좌표이므로 검색을 거칠 필요가 전혀
+// 없다 — 오인식 방지를 위해 대략 한국 영역(위도 33~39, 경도 124~132)인지만 확인한다.
+function parseRawCoordinates(text) {
+  const m = text.trim().match(/^(-?\d{1,2}\.\d+)\s*,\s*(-?\d{1,3}\.\d+)$/);
+  if (!m) return null;
+  const lat = parseFloat(m[1]);
+  const lng = parseFloat(m[2]);
+  if (lat < 33 || lat > 39 || lng < 124 || lng > 132) return null;
+  return { lat, lng };
+}
+
 async function searchAddressOSM(query) {
   const url =
     `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}` +
@@ -312,6 +324,15 @@ async function searchAddressOSM(query) {
 }
 
 async function searchPlaces(query) {
+  const rawCoords = parseRawCoordinates(query);
+  if (rawCoords) {
+    return {
+      available: true,
+      results: [{ name: query, address: null, lat: rawCoords.lat, lng: rawCoords.lng, category: null }],
+      source: "좌표 직접 입력",
+    };
+  }
+
   const mapsMatch = await resolveGoogleMapsLink(query);
   if (mapsMatch) {
     return {

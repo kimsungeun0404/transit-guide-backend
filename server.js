@@ -212,7 +212,7 @@ function normalizeSeoulPathList(pathList, totalTimeMin) {
   });
 }
 
-async function fetchTransitRoute(slat, slng, dlat, dlng, preferSubway = false) {
+async function fetchTransitRoute(slat, slng, dlat, dlng, preferSubway = false, debug = false) {
   const apiKey = process.env.SEOUL_TRANSIT_API_KEY;
   if (!apiKey) return { available: false, reason: "SEOUL_TRANSIT_API_KEY 미설정" };
 
@@ -249,6 +249,19 @@ async function fetchTransitRoute(slat, slng, dlat, dlng, preferSubway = false) {
       summary: { totalTimeMin, transfers: Math.max(0, segments.length - 1), fare: null },
       segments,
       source: "서울시 대중교통환승경로 조회 서비스",
+      ...(debug
+        ? {
+            _debug: {
+              subwayCount: subwayItems.length,
+              busCount: busItems.length,
+              mixedCount: mixedItems.length,
+              subwayBestTime: subwayItems.length ? Math.min(...subwayItems.map((p) => Number(p.time))) : null,
+              busBestTime: busItems.length ? Math.min(...busItems.map((p) => Number(p.time))) : null,
+              mixedBestTime: mixedItems.length ? Math.min(...mixedItems.map((p) => Number(p.time))) : null,
+              mixedHasSubwayLeg: mixedItems.some((p) => (p.pathList || []).some((leg) => leg.railLinkList)),
+            },
+          }
+        : {}),
     };
   } catch (err) {
     console.warn("[route] 서울시 대중교통 API 호출 실패:", err.message);
@@ -551,9 +564,15 @@ app.get("/api/route/transit", async (req, res) => {
   const dlng = parseFloat(req.query.dlng);
   // 공항처럼 서울시 경계 밖에서 출발하는 화면(AccommodationScreen)만 이 플래그를 보낸다.
   const preferSubway = req.query.preferSubway === "1";
+  const debug = req.query.debug === "1";
 
   if (![slat, slng, dlat, dlng].every(Number.isFinite)) {
     return res.status(400).json({ error: "slat, slng, dlat, dlng 쿼리 파라미터가 필요합니다 (숫자)" });
+  }
+
+  if (debug) {
+    const route = await fetchTransitRoute(slat, slng, dlat, dlng, preferSubway, true);
+    return res.json(route);
   }
 
   const cacheKey = routeCacheKey(slat, slng, dlat, dlng, preferSubway);

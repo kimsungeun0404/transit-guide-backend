@@ -22,8 +22,10 @@ const BACKEND_URL = process.env.BACKEND_URL || "https://transit-guide-backend.on
 const CACHE_PATH = path.join(__dirname, "..", "data", "routeCache.json");
 const MAX_CALLS_PER_RUN = 20; // 하루 30회 중 20회만 쓰고, 나머지는 실제 사용자 트래픽용으로 남겨둔다
 
+// server.js의 routeCacheKey()와 반드시 같은 반올림 자릿수를 써야 한다 — 다르면 이 스크립트가
+// 채워둔 항목과 실시간 조회가 서로 다른 키로 어긋나서 캐시가 전혀 안 맞게 된다.
 function routeCacheKey(slat, slng, dlat, dlng) {
-  const round = (n) => Number(n).toFixed(6);
+  const round = (n) => Number(n).toFixed(4);
   return `${round(slat)},${round(slng)},${round(dlat)},${round(dlng)}`;
 }
 

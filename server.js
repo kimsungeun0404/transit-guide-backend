@@ -477,6 +477,14 @@ app.get("/api/stations/nearest", (req, res) => {
 // 미리 조회해서 backend/data/routeCache.json에 저장해두고 여기서 먼저 찾아본다.
 // scripts/seedRouteCache.js가 매일 이 캐시를 조금씩 채워나간다 — 자세한 내용은 그 파일 참고.
 // 캐시에 없는 조합만 그때 ODsay를 실시간으로 호출한다.
+//
+// 이 사전 시딩은 "역↔관광지/공항"처럼 고정된 조합만 커버한다 — 숙소는 사용자가 주소로
+// 직접 검색해서 나오는 임의의 좌표라 애초에 미리 목록화할 수가 없다. 그래서 실시간 조회가
+// 성공하면 그 결과도 캐시에 실시간으로 추가해서, 같은 지역(가까운 숙소들)의 다음 조회부터는
+// 캐시가 먹도록 한다 — 좌표를 소수점 4자리(~11m)로 반올림해 "사실상 같은 건물"끼리는
+// 캐시를 공유하게 한다. Render 무료 플랜은 디스크가 재배포/재시작 시 초기화될 수 있어
+// 파일 저장이 영구적이진 않지만, 인스턴스가 떠 있는 동안은(그리고 재시작 전까지는 파일에도)
+// 계속 누적되므로 완전히 헛되지는 않는다.
 let routeCache = {};
 try {
   routeCache = JSON.parse(fs.readFileSync(ROUTE_CACHE_PATH, "utf8"));
@@ -485,8 +493,18 @@ try {
 }
 
 function routeCacheKey(slat, slng, dlat, dlng) {
-  const round = (n) => Number(n).toFixed(6);
+  const round = (n) => Number(n).toFixed(4);
   return `${round(slat)},${round(slng)},${round(dlat)},${round(dlng)}`;
+}
+
+function rememberRoute(cacheKey, route) {
+  routeCache[cacheKey] = route;
+  try {
+    fs.writeFileSync(ROUTE_CACHE_PATH, JSON.stringify(routeCache));
+  } catch (err) {
+    // 디스크에 못 써도(읽기 전용 배포 등) 메모리 캐시는 이번 인스턴스가 떠 있는 동안 계속 유효하다.
+    console.warn("[route] 캐시 파일 저장 실패(메모리 캐시는 계속 사용됨):", err.message);
+  }
 }
 
 // 대중교통 경로 검색 — ODsay API 연동 (ODSAY_API_KEY 미설정 시 { available: false } 반환)
@@ -508,6 +526,8 @@ app.get("/api/route/transit", async (req, res) => {
   }
 
   const route = await fetchTransitRoute(slat, slng, dlat, dlng);
+  // 성공한 결과만 캐시에 넣는다 — 할당량 초과 등 일시적 실패를 "경로 없음"으로 굳혀버리면 안 된다.
+  if (route.available) rememberRoute(cacheKey, route);
   res.json(route);
 });
 

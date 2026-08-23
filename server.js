@@ -331,6 +331,18 @@ async function geocodeOnceOSM(text) {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+// "yongsangu"→"yongsan-gu", "huamro"→"huam-ro"처럼 로마자 주소에서 구/동/로/길/대로 접미사가
+// 하이픈 없이 붙어 나오면 Nominatim이 매칭에 실패한다(실측 확인: 대소문자·단어 순서는 무관하고
+// 하이픈 유무만으로 성공/실패가 갈림). 단, "Myeongdong"처럼 이미 굳어진 지명에 이 규칙을 무조건
+// 적용하면 "Myeong-dong"으로 잘못 쪼갤 수 있으므로, 원문이 이미 성공한 경우엔 절대 쓰지 않고
+// 다른 시도가 전부 실패했을 때 마지막 안전망으로만 사용한다.
+function insertAddressHyphens(text) {
+  return text.replace(/([a-zA-Z]+?)(daero|dong|gil|gun|gu|ro)\b/gi, (match, stem, suf) => {
+    if (!stem || stem.endsWith("-")) return match;
+    return `${stem}-${suf}`;
+  });
+}
+
 // 국가명("South Korea")이나 우편번호("04334")처럼 예약 사이트 주소 끝에 붙는 조각이 있으면
 // Nominatim이 매칭에 실패하는 경우가 많다(실측 확인: "...Yongsan-gu, Seoul"까지는 성공하지만
 // "...Yongsan-gu, Seoul, South Korea, 04334"는 실패). 전체 문자열이 실패하면 쉼표 단위로
@@ -345,6 +357,14 @@ async function searchAddressOSM(query) {
     if (result) return result;
     if (drop < maxDrops) await sleep(300); // Nominatim 이용 정책: 초당 1회 이하
   }
+
+  const hyphenated = insertAddressHyphens(query);
+  if (hyphenated !== query) {
+    await sleep(300);
+    const result = await geocodeOnceOSM(hyphenated);
+    if (result) return result;
+  }
+
   return null;
 }
 

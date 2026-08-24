@@ -88,9 +88,9 @@
       {
         "mode": "subway",
         "line": "공항철도",
-        "direction": "인천공항2터미널",
-        "startStation": "서울역",
-        "endStation": "인천공항2터미널",
+        "direction": "서울역",
+        "startStation": "인천공항2터미널",
+        "endStation": "서울역",
         "stationCount": 13,
         "minutes": 60,
         "startExitNo": "14",
@@ -1236,6 +1236,577 @@
         "startLng": 126.91493557184022,
         "endLat": 37.46639852724988,
         "endLng": 126.43436382047338
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "arex-t1;37.4475,126.4526,37.5532,126.9725": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 61,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "공항철도",
+        "startStation": "인천공항1터미널",
+        "endStation": "서울역",
+        "stationCount": 12,
+        "minutes": 60
+      }
+    ],
+    "source": "공항철도(AREX) 공식 시간표 + 서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5532,126.9725,37.4475,126.4526;subway": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 40,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "공항철도",
+        "startStation": "서울",
+        "endStation": "공덕",
+        "stationCount": 1,
+        "minutes": 20
+      },
+      {
+        "mode": "bus",
+        "busNo": "6701",
+        "startStation": "공덕역",
+        "endStation": "인천공항T1-3층",
+        "minutes": 20,
+        "startLat": 37.544453020425706,
+        "startLng": 126.95134881598747,
+        "endLat": 37.445675421127625,
+        "endLng": 126.45009379466634
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "arex-t2;37.4688,126.4336,37.5532,126.9725": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 67,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "공항철도",
+        "startStation": "인천공항2터미널",
+        "endStation": "서울역",
+        "stationCount": 13,
+        "minutes": 66
+      }
+    ],
+    "source": "공항철도(AREX) 공식 시간표 + 서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5532,126.9725,37.4688,126.4336;subway": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 84,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "공항철도",
+        "startStation": "서울",
+        "endStation": "공덕",
+        "stationCount": 1,
+        "minutes": 42
+      },
+      {
+        "mode": "bus",
+        "busNo": "6701",
+        "startStation": "공덕역",
+        "endStation": "인천공항T2-3층",
+        "minutes": 42,
+        "startLat": 37.544453020425706,
+        "startLng": 126.95134881598747,
+        "endLat": 37.46639852724988,
+        "endLng": 126.43436382047338
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5622,126.8013,37.5532,126.9725;subway": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 38,
+      "transfers": 2,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "공항철도",
+        "startStation": "김포공항",
+        "endStation": "공덕",
+        "stationCount": 3,
+        "minutes": 16
+      },
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "공덕",
+        "endStation": "삼각지",
+        "stationCount": 2,
+        "minutes": 11
+      },
+      {
+        "mode": "subway",
+        "line": "4호선",
+        "startStation": "삼각지",
+        "endStation": "서울",
+        "stationCount": 2,
+        "minutes": 11
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5532,126.9725,37.5622,126.8013;subway": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 49,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "공항철도",
+        "startStation": "서울",
+        "endStation": "김포공항",
+        "stationCount": 4,
+        "minutes": 49
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "arex-t1;37.4475,126.4526,37.5611,126.9883": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 69,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "공항철도",
+        "startStation": "인천공항1터미널",
+        "endStation": "서울역",
+        "stationCount": 12,
+        "minutes": 60
+      },
+      {
+        "mode": "subway",
+        "line": "4호선",
+        "startStation": "서울",
+        "endStation": "명동",
+        "stationCount": 2,
+        "minutes": 9
+      }
+    ],
+    "source": "공항철도(AREX) 공식 시간표 + 서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5611,126.9883,37.4475,126.4526;subway": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 49,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "4호선",
+        "startStation": "명동",
+        "endStation": "이촌",
+        "stationCount": 6,
+        "minutes": 42
+      },
+      {
+        "mode": "bus",
+        "busNo": "6010",
+        "startStation": "동부이촌동",
+        "endStation": "인천공항T1-3층",
+        "minutes": 7,
+        "startLat": 37.52062564326381,
+        "startLng": 126.9718073534327,
+        "endLat": 37.445675421127625,
+        "endLng": 126.45009379466634
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "arex-t2;37.4688,126.4336,37.5611,126.9883": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 75,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "공항철도",
+        "startStation": "인천공항2터미널",
+        "endStation": "서울역",
+        "stationCount": 13,
+        "minutes": 66
+      },
+      {
+        "mode": "subway",
+        "line": "4호선",
+        "startStation": "서울",
+        "endStation": "명동",
+        "stationCount": 2,
+        "minutes": 9
+      }
+    ],
+    "source": "공항철도(AREX) 공식 시간표 + 서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5611,126.9883,37.4688,126.4336;subway": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 94,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "4호선",
+        "startStation": "명동",
+        "endStation": "사당",
+        "stationCount": 9,
+        "minutes": 85
+      },
+      {
+        "mode": "bus",
+        "busNo": "8842(광주터미널 - 인천공항T2-3층)",
+        "startStation": "사당역",
+        "endStation": "인천공항T2-B1층",
+        "minutes": 9,
+        "startLat": 37.47417579111559,
+        "startLng": 126.98211350347415,
+        "endLat": 37.46645064240033,
+        "endLng": 126.43395644969692
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5622,126.8013,37.5611,126.9883;subway": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 44,
+      "transfers": 2,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "공항철도",
+        "startStation": "김포공항",
+        "endStation": "공덕",
+        "stationCount": 3,
+        "minutes": 15
+      },
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "공덕",
+        "endStation": "삼각지",
+        "stationCount": 2,
+        "minutes": 10
+      },
+      {
+        "mode": "subway",
+        "line": "4호선",
+        "startStation": "삼각지",
+        "endStation": "명동",
+        "stationCount": 4,
+        "minutes": 20
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5611,126.9883,37.5622,126.8013;subway": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 57,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "6015",
+        "startStation": "명동역.세종호텔",
+        "endStation": "충정로역2호선",
+        "minutes": 3,
+        "startLat": 37.56104240460027,
+        "startLng": 126.98643939494177,
+        "endLat": 37.55967710410791,
+        "endLng": 126.96419748707201
+      },
+      {
+        "mode": "subway",
+        "line": "5호선",
+        "startStation": "충정로",
+        "endStation": "김포공항",
+        "stationCount": 19,
+        "minutes": 54
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "arex-t1;37.4475,126.4526,37.5660,126.9826": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 75,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "공항철도",
+        "startStation": "인천공항1터미널",
+        "endStation": "서울역",
+        "stationCount": 12,
+        "minutes": 60
+      },
+      {
+        "mode": "bus",
+        "busNo": "9000-1성남",
+        "startStation": "서울역버스환승센터",
+        "endStation": "명동입구",
+        "minutes": 15,
+        "startLat": 37.55533610622956,
+        "startLng": 126.97271108072482,
+        "endLat": 37.56467328639449,
+        "endLng": 126.98246544517124
+      }
+    ],
+    "source": "공항철도(AREX) 공식 시간표 + 서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5660,126.9826,37.4475,126.4526;subway": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 42,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "504",
+        "startStation": "을지로입구.시청입구",
+        "endStation": "한강대교북단.LG유플러스",
+        "minutes": 21,
+        "startLat": 37.566087801344935,
+        "startLng": 126.98116329829124,
+        "endLat": 37.524254696709136,
+        "endLng": 126.96317355176619
+      },
+      {
+        "mode": "bus",
+        "busNo": "6001",
+        "startStation": "한강대교북단.LG유플러스",
+        "endStation": "인천공항T1-3층",
+        "minutes": 21,
+        "startLat": 37.524254696709136,
+        "startLng": 126.96317355176619,
+        "endLat": 37.445675421127625,
+        "endLng": 126.45009379466634
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "arex-t2;37.4688,126.4336,37.5660,126.9826": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 81,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "공항철도",
+        "startStation": "인천공항2터미널",
+        "endStation": "서울역",
+        "stationCount": 13,
+        "minutes": 66
+      },
+      {
+        "mode": "bus",
+        "busNo": "9000-1성남",
+        "startStation": "서울역버스환승센터",
+        "endStation": "명동입구",
+        "minutes": 15,
+        "startLat": 37.55533610622956,
+        "startLng": 126.97271108072482,
+        "endLat": 37.56467328639449,
+        "endLng": 126.98246544517124
+      }
+    ],
+    "source": "공항철도(AREX) 공식 시간표 + 서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5660,126.9826,37.4688,126.4336;subway": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 85,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "5104오산",
+        "startStation": "을지로입구역.광교",
+        "endStation": "서울역버스환승센터",
+        "minutes": 43,
+        "startLat": 37.567601850567264,
+        "startLng": 126.98255532157546,
+        "endLat": 37.55533610622956,
+        "endLng": 126.97271108072482
+      },
+      {
+        "mode": "bus",
+        "busNo": "6001",
+        "startStation": "서울역버스환승센터",
+        "endStation": "인천공항T2-3층",
+        "minutes": 43,
+        "startLat": 37.55510171359198,
+        "startLng": 126.97224710889394,
+        "endLat": 37.46639852724988,
+        "endLng": 126.43436382047338
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5622,126.8013,37.5660,126.9826;subway": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 44,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "공항철도",
+        "startStation": "김포공항",
+        "endStation": "공덕",
+        "stationCount": 3,
+        "minutes": 33
+      },
+      {
+        "mode": "bus",
+        "busNo": "6015",
+        "startStation": "공덕역",
+        "endStation": "이비스엠버서더호텔",
+        "minutes": 11,
+        "startLat": 37.54355173743481,
+        "startLng": 126.95089673274907,
+        "endLat": 37.56430382486593,
+        "endLng": 126.98237497286527
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5660,126.9826,37.5622,126.8013;subway": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 53,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "을지로입구",
+        "endStation": "을지로4가",
+        "stationCount": 2,
+        "minutes": 4
+      },
+      {
+        "mode": "subway",
+        "line": "5호선",
+        "startStation": "을지로4가",
+        "endStation": "김포공항",
+        "stationCount": 23,
+        "minutes": 49
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "arex-t1;37.4475,126.4526,37.5345,126.9944": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 68,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "공항철도",
+        "startStation": "인천공항1터미널",
+        "endStation": "공덕",
+        "stationCount": 11,
+        "minutes": 56
+      },
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "공덕",
+        "endStation": "이태원",
+        "stationCount": 4,
+        "minutes": 12
+      }
+    ],
+    "source": "공항철도(AREX) 공식 시간표 + 서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5345,126.9944,37.4475,126.4526;subway": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 35,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "이태원",
+        "endStation": "삼각지",
+        "stationCount": 2,
+        "minutes": 23
+      },
+      {
+        "mode": "bus",
+        "busNo": "6001",
+        "startStation": "삼각지역.전쟁기념관",
+        "endStation": "인천공항T1-3층",
+        "minutes": 12,
+        "startLat": 37.535935841024354,
+        "startLng": 126.97415522976561,
+        "endLat": 37.445675421127625,
+        "endLng": 126.45009379466634
       }
     ],
     "source": "서울시 대중교통환승경로 조회 서비스"

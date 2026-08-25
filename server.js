@@ -337,14 +337,17 @@ function pickByDirection(fromCoord, toCoord, candidateNames) {
 }
 
 // 이 노선을 startStation에서 endStation 방향으로 타고 있을 때, 빠른 환승 데이터의 종착역
-// 후보 중 실제로 진행 중인 방향이 어느 쪽인지 좌표로 추정한다. 일부 역은 한쪽 방향의
-// terminus 필드가 빈 문자열로 누락돼 있는데(정부 데이터 자체의 결측치, 실측 확인: 사당역
-// 4호선→2호선 남쪽 방향), 이름 있는 후보들과 방향이 반대로 나오면 그 빈 문자열 쪽이 실제로는
-// 나머지 한 방향을 가리키는 것으로 보고 시도해본다.
-function inferTerminus(line, startStation, endStation) {
-  const rowsForLine = fastTransferRows.filter((r) => r.line === line);
-  const candidates = [...new Set(rowsForLine.filter((r) => r.terminus).map((r) => r.terminus))];
-  const hasBlankTerminus = rowsForLine.some((r) => !r.terminus);
+// 후보 중 실제로 진행 중인 방향이 어느 쪽인지 좌표로 추정한다. 후보는 반드시 station(환승역)
+// 기준으로 좁혀야 한다 — 같은 노선이라도 역마다 종착역 표기가 제각각이라(예: 4호선 남쪽 방향이
+// 사당역 데이터에는 빈 문자열로, 다른 역 데이터에는 "남태령"으로 쓰여 있음) 노선 전체에서 후보를
+// 모으면 이 역의 실제 데이터에는 없는 이름을 고를 수 있다. 일부 역은 한쪽 방향의 terminus
+// 필드가 빈 문자열로 누락돼 있는데(정부 데이터 자체의 결측치, 실측 확인: 사당역 4호선→2호선
+// 남쪽 방향), 이름 있는 후보들과 방향이 반대로 나오면 그 빈 문자열 쪽이 실제로는 나머지 한
+// 방향을 가리키는 것으로 보고 시도해본다.
+function inferTerminus(station, line, startStation, endStation) {
+  const rowsHere = fastTransferRows.filter((r) => r.station === station && r.line === line);
+  const candidates = [...new Set(rowsHere.filter((r) => r.terminus).map((r) => r.terminus))];
+  const hasBlankTerminus = rowsHere.some((r) => !r.terminus);
 
   if (candidates.length === 0) return hasBlankTerminus ? "" : null;
   if (candidates.length === 1 && !hasBlankTerminus) return candidates[0];
@@ -365,8 +368,8 @@ function enrichSegmentsWithBoardingSpots(segments) {
     if (seg.mode !== "subway" || next.mode !== "subway") continue;
 
     const line = normalizeLineForFastTransfer(seg.line);
-    const terminus = inferTerminus(line, seg.startStation, seg.endStation);
-    if (!terminus) continue;
+    const terminus = inferTerminus(seg.endStation, line, seg.startStation, seg.endStation);
+    if (terminus === null) continue; // terminus는 빈 문자열("")도 유효한 결과라 null과 구분해야 한다.
 
     // next 하나만이 아니라 그 뒤로 남은 모든 구간의 역 이름까지 힌트로 준다 — 방향 추정에
     // "가장 멀리 아는 지점"을 쓰므로(pickByDirection), 목적지에 가까운 역일수록 더 정확하다.

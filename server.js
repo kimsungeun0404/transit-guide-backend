@@ -248,6 +248,7 @@ async function fetchTransitRoute(slat, slng, dlat, dlng, preferSubway = false, d
     const best = pool.reduce((a, b) => (Number(a.time) <= Number(b.time) ? a : b));
     const totalTimeMin = Number(best.time) || 0;
     const segments = normalizeSeoulPathList(best.pathList, totalTimeMin);
+    enrichSegmentsWithBoardingSpots(segments);
 
     return {
       available: true,
@@ -299,6 +300,67 @@ const FAST_TRANSFER_LINE_ALIASES = {
 };
 function normalizeLineForFastTransfer(line) {
   return FAST_TRANSFER_LINE_ALIASES[line] || line;
+}
+
+// stations.csv의 역 이름은 대부분 "역" 접미사가 붙어 있지만("서울역"), 빠른 환승 데이터의
+// 역/종착역 이름은 붙어 있을 때도("서울역") 없을 때도("방화") 있다 — 둘 다 시도해서 찾는다.
+function findStationCoords(name) {
+  if (!name) return null;
+  let hit = stationsCache.find((s) => s.name === name);
+  if (!hit) hit = stationsCache.find((s) => s.name === `${name}역`);
+  if (!hit && name.endsWith("역")) hit = stationsCache.find((s) => s.name === name.slice(0, -1));
+  return hit ? { lat: hit.lat, lng: hit.lng } : null;
+}
+
+// 이 노선을 startStation에서 endStation 방향으로 타고 있을 때, 빠른 환승 데이터의 두 종착역
+// 후보 중 실제로 진행 중인 방향이 어느 쪽인지 좌표로 추정한다(직접적인 노선 순서 데이터가
+// 없어서, "도착역 기준 종착역 방향 벡터"와 "출발역→도착역 방향 벡터"의 내적으로 판단 —
+// 같은 방향이면 양수가 나온다). 좌표를 못 찾거나 방향이 애매하면(음수) 포기하고 null 반환 —
+// 틀린 칸을 알려주는 것보단 안내를 생략하는 게 낫다.
+function inferTerminus(line, startStation, endStation) {
+  const candidates = [...new Set(fastTransferRows.filter((r) => r.line === line && r.terminus).map((r) => r.terminus))];
+  if (candidates.length === 0) return null;
+  if (candidates.length === 1) return candidates[0];
+
+  const startCoord = findStationCoords(startStation);
+  const endCoord = findStationCoords(endStation);
+  if (!startCoord || !endCoord) return null;
+  const dirLat = endCoord.lat - startCoord.lat;
+  const dirLng = endCoord.lng - startCoord.lng;
+
+  let best = null;
+  let bestScore = -Infinity;
+  for (const term of candidates) {
+    const c = findStationCoords(term);
+    if (!c) continue;
+    const score = (c.lat - endCoord.lat) * dirLat + (c.lng - endCoord.lng) * dirLng;
+    if (score > bestScore) {
+      bestScore = score;
+      best = term;
+    }
+  }
+  return bestScore > 0 ? best : null;
+}
+
+// 경로의 모든 지하철→지하철 환승 지점에 빠른 환승 칸·문 정보를 채워넣는다(버스가 낀 환승은
+// 이 데이터에 없어서 건너뛴다). segments를 제자리에서 수정한다.
+function enrichSegmentsWithBoardingSpots(segments) {
+  for (let i = 0; i < segments.length - 1; i++) {
+    const seg = segments[i];
+    const next = segments[i + 1];
+    if (seg.mode !== "subway" || next.mode !== "subway") continue;
+
+    const line = normalizeLineForFastTransfer(seg.line);
+    const terminus = inferTerminus(line, seg.startStation, seg.endStation);
+    if (!terminus) continue;
+
+    const hintStations = [next.startStation, next.endStation].filter(Boolean);
+    const spot = findBoardingSpot(seg.endStation, line, terminus, normalizeLineForFastTransfer(next.line), hintStations);
+    if (spot) {
+      seg.boardingCar = spot.car;
+      seg.boardingDoor = spot.door;
+    }
+  }
 }
 
 function findBoardingSpot(station, line, terminus, transferLine, hintStationNames = []) {

@@ -21,7 +21,10 @@ const {
 
 const BACKEND_URL = process.env.BACKEND_URL || "https://transit-guide-backend.onrender.com";
 const CACHE_PATH = path.join(__dirname, "..", "data", "routeCache.json");
-const MAX_CALLS_PER_RUN = 20; // 하루 30회 중 20회만 쓰고, 나머지는 실제 사용자 트래픽용으로 남겨둔다
+// 조합 하나당 서울시 API 호출은 최대 6회(공항 출발은 후보 2개 역 × 지하철/버스/혼합 3종)까지
+// 쓸 수 있어 최악의 경우 100개 × 6회 = 600회, 하루 한도 1,000회 중 400회는 실제 사용자 트래픽용으로
+// 남는다 — 실제로는 후보 역→목적지 조회가 캐시에 계속 쌓여서 이보다 훨씬 적게 쓴다.
+const MAX_CALLS_PER_RUN = 100;
 
 // server.js의 routeCacheKey()와 반드시 같은 반올림 자릿수를 써야 한다 — 다르면 이 스크립트가
 // 채워둔 항목과 실시간 조회가 서로 다른 키로 어긋나서 캐시가 전혀 안 맞게 된다.

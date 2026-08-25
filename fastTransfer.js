@@ -53,14 +53,44 @@ function normalizeLineForFastTransfer(line) {
   return FAST_TRANSFER_LINE_ALIASES[line] || line;
 }
 
+// 빠른 환승 데이터의 역 이름은 "대림(구로구청)"처럼 부기명이 괄호로 붙어 있거나, "불암산(당고개)"
+// 처럼 개정된 이름과 옛 이름이 함께 붙어 있는 경우가 많다(실측 확인: "대림"으로 조회하면 서울시
+// API 응답과는 안 맞아서 아예 매칭이 안 됨). 서울시 API·stations.csv는 둘 중 하나만 쓰므로,
+// 괄호 앞부분/괄호 안쪽/"역" 유무를 전부 후보로 만들어 어느 쪽이든 매칭되게 한다.
+function stationNameVariants(name) {
+  if (!name) return [];
+  const variants = new Set([name]);
+  const parenMatch = name.match(/^(.*?)\((.*?)\)$/);
+  if (parenMatch) {
+    variants.add(parenMatch[1].trim());
+    variants.add(parenMatch[2].trim());
+  } else {
+    variants.add(name.replace(/\(.*\)$/, "").trim());
+  }
+  for (const v of [...variants]) {
+    variants.add(v.endsWith("역") ? v.slice(0, -1) : `${v}역`);
+  }
+  variants.delete("");
+  return [...variants];
+}
+
+// 두 역 이름이 같은 역을 가리키는지(표기 변형을 감안해서) 판정한다.
+function stationNamesMatch(a, b) {
+  if (!a || !b) return false;
+  if (a === b) return true;
+  const variantsB = new Set(stationNameVariants(b));
+  return stationNameVariants(a).some((v) => variantsB.has(v));
+}
+
 // stations.csv의 역 이름은 대부분 "역" 접미사가 붙어 있지만("서울역"), 빠른 환승 데이터의
-// 역/종착역 이름은 붙어 있을 때도("서울역") 없을 때도("방화") 있다 — 둘 다 시도해서 찾는다.
+// 역/종착역 이름은 붙어 있을 때도("서울역") 없을 때도("방화") 있고 괄호 부기명이 붙기도 한다
+// ("대림(구로구청)", "불암산(당고개)") — 표기 변형을 전부 후보로 만들어 찾는다.
 function findStationCoords(name) {
-  if (!name) return null;
-  let hit = stationsCache.find((s) => s.name === name);
-  if (!hit) hit = stationsCache.find((s) => s.name === `${name}역`);
-  if (!hit && name.endsWith("역")) hit = stationsCache.find((s) => s.name === name.slice(0, -1));
-  return hit ? { lat: hit.lat, lng: hit.lng } : null;
+  for (const variant of stationNameVariants(name)) {
+    const hit = stationsCache.find((s) => s.name === variant);
+    if (hit) return { lat: hit.lat, lng: hit.lng };
+  }
+  return null;
 }
 
 // 두 좌표를 지나는 방향 벡터를 기준으로, 후보들(각각 좌표 조회 가능한 역 이름) 중 그 방향과
@@ -96,7 +126,7 @@ function pickByDirection(fromCoord, toCoord, candidateNames) {
 // 남쪽 방향), 이름 있는 후보들과 방향이 반대로 나오면 그 빈 문자열 쪽이 실제로는 나머지 한
 // 방향을 가리키는 것으로 보고 시도해본다.
 function inferTerminus(station, line, startStation, endStation) {
-  const rowsHere = fastTransferRows.filter((r) => r.station === station && r.line === line);
+  const rowsHere = fastTransferRows.filter((r) => stationNamesMatch(r.station, station) && r.line === line);
   const candidates = [...new Set(rowsHere.filter((r) => r.terminus).map((r) => r.terminus))];
   const hasBlankTerminus = rowsHere.some((r) => !r.terminus);
 
@@ -112,7 +142,7 @@ function inferTerminus(station, line, startStation, endStation) {
 
 function findBoardingSpot(station, line, terminus, transferLine, hintStationNames = []) {
   const candidates = fastTransferRows.filter(
-    (r) => r.station === station && r.line === line && r.terminus === terminus && r.transferLine === transferLine && r.car
+    (r) => stationNamesMatch(r.station, station) && r.line === line && r.terminus === terminus && r.transferLine === transferLine && r.car
   );
   if (candidates.length === 0) return null;
   if (candidates.length === 1) return { car: candidates[0].car, door: candidates[0].door };

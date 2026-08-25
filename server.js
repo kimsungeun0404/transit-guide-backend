@@ -325,7 +325,9 @@ function pickByDirection(fromCoord, toCoord, candidateNames) {
   for (const name of candidateNames) {
     const c = findStationCoords(name);
     if (!c) continue;
-    const score = (c.lat - toCoord.lat) * dirLat + (c.lng - toCoord.lng) * dirLng;
+    // (후보 - 시작점) 벡터가 (목표 - 시작점) 벡터와 같은 방향을 가리키는지 — 후보가 시작점보다
+    // 훨씬 가깝든 훨씬 멀든(종착역처럼) 상관없이, 같은 쪽으로 가는지만 보는 게 핵심이다.
+    const score = (c.lat - fromCoord.lat) * dirLat + (c.lng - fromCoord.lng) * dirLng;
     if (score > bestScore) {
       bestScore = score;
       best = name;

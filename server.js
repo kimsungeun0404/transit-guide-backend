@@ -24,6 +24,7 @@ const PORT = process.env.PORT || 3001;
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "*";
 const CSV_PATH = path.join(__dirname, "data", "stations.csv");
 const ROUTE_CACHE_PATH = path.join(__dirname, "data", "routeCache.json");
+const FAST_TRANSFER_PATH = path.join(__dirname, "data", "fastTransfer.json");
 const REFRESH_INTERVAL_MS = 24 * 60 * 60 * 1000; // 24시간마다 갱신 시도 (분기별 갱신 데이터라 이 정도면 충분)
 
 app.use(cors({ origin: ALLOWED_ORIGIN }));
@@ -274,6 +275,52 @@ async function fetchTransitRoute(slat, slng, dlat, dlng, preferSubway = false, d
   }
 }
 
+// 국토교통부 "철도역 빠른 환승 정보" 공식 데이터 — 환승역에서 몇 번째 칸, 몇 번 출입문 앞에서
+// 타면 환승 통로와 가장 가까운지 알려준다. 서울시 대중교통 API는 이 정보를 안 주기 때문에
+// (예전 ODsay의 boardingCar에 해당하는 게 없음) 별도 조회 없이 이 정적 데이터로 채운다.
+// 실측 확인: 같은 (역, 도착 방향, 환승 노선) 조합이면 환승 후 어느 방향으로 가든 칸·문 번호가
+// 대부분 동일하다(같은 승강장·계단을 쓰기 때문) — 그래서 도착 방향만 알면 되고, 환승 후
+// 방향까지는 몰라도 되는 경우가 대부분이다. 방향에 따라 갈리는 소수의 경우는 뒤쪽 정차역
+// 이름(afterStation)이 실제 경로의 역 이름과 일치하는 걸 우선한다.
+let fastTransferRows = [];
+try {
+  fastTransferRows = JSON.parse(fs.readFileSync(FAST_TRANSFER_PATH, "utf8"));
+} catch (err) {
+  console.warn("[fastTransfer] 빠른 환승 데이터 로드 실패:", err.message);
+}
+
+// 이 데이터는 정부 원본 그대로라 노선 이름 표기가 서울시 API와 살짝 다르다("경의중앙선" ↔
+// "경의중앙" 등, "신분당선"만 예외적으로 그대로 "선"이 붙어 있다) — 비교 전에 맞춰준다.
+const FAST_TRANSFER_LINE_ALIASES = {
+  경의중앙선: "경의중앙",
+  수인분당선: "수인분당",
+  경춘선: "경춘",
+  우이신설선: "우이신설",
+};
+function normalizeLineForFastTransfer(line) {
+  return FAST_TRANSFER_LINE_ALIASES[line] || line;
+}
+
+function findBoardingSpot(station, line, terminus, transferLine, hintStationNames = []) {
+  const candidates = fastTransferRows.filter(
+    (r) => r.station === station && r.line === line && r.terminus === terminus && r.transferLine === transferLine && r.car
+  );
+  if (candidates.length === 0) return null;
+  if (candidates.length === 1) return { car: candidates[0].car, door: candidates[0].door };
+
+  const uniqueSpots = new Set(candidates.map((c) => `${c.car},${c.door}`));
+  if (uniqueSpots.size === 1) {
+    const [car, door] = [...uniqueSpots][0].split(",");
+    return { car, door };
+  }
+
+  // 방향에 따라 칸·문이 갈리는 경우 — 실제 경로에 나오는 역 이름과 afterStation이 일치하는 후보를 쓴다.
+  const matched = candidates.find((c) => hintStationNames.some((name) => name && (name.includes(c.afterStation) || c.afterStation?.includes(name))));
+  if (matched) return { car: matched.car, door: matched.door };
+
+  return null; // 방향을 확정 못 하면 틀린 칸을 알려주는 것보단 안내를 생략하는 게 낫다.
+}
+
 // 인천공항(제1/2터미널)은 행정구역상 인천이라 서울시 API의 지하철 네트워크에 아예 등록되어
 // 있지 않다(실측 확인: 이 좌표를 출발지로 넣으면 지하철 구간이 포함된 결과가 단 하나도 안 나옴,
 // 항상 서울 시내버스 기준 추정치라 비현실적인 버스 경로만 나온다 — 예: 50km를 16분).
@@ -336,6 +383,19 @@ async function fetchIncheonAirportRoute(terminal, dlat, dlng) {
     stationCount: terminal === "t2" ? best.stop.t2Count : best.stop.t1Count,
     minutes: best.arexMinutes,
   };
+
+  // 서울역에서 내리면 그 자체가 최종 도착지일 수도 있어 환승이 아닐 수 있다 — 환승이 실제로
+  // 있을 때만(다음 구간이 지하철일 때만) 빠른 환승 칸·문 정보를 찾는다.
+  const nextSeg = best.sub.available ? best.sub.segments[0] : null;
+  if (nextSeg?.mode === "subway") {
+    const hintStations = best.sub.segments.flatMap((s) => [s.startStation, s.endStation]).filter(Boolean);
+    const spot = findBoardingSpot(best.stop.name, "공항철도", "서울역", normalizeLineForFastTransfer(nextSeg.line), hintStations);
+    if (spot) {
+      arexSegment.boardingCar = spot.car;
+      arexSegment.boardingDoor = spot.door;
+    }
+  }
+
   const segments = [arexSegment, ...(best.sub.available ? best.sub.segments : [])];
   const extraMinutes = best.sub.available ? best.sub.summary.totalTimeMin : best.sub.walkMinutes || 0;
 

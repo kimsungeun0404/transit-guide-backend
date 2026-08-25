@@ -312,34 +312,46 @@ function findStationCoords(name) {
   return hit ? { lat: hit.lat, lng: hit.lng } : null;
 }
 
-// 이 노선을 startStation에서 endStation 방향으로 타고 있을 때, 빠른 환승 데이터의 두 종착역
-// 후보 중 실제로 진행 중인 방향이 어느 쪽인지 좌표로 추정한다(직접적인 노선 순서 데이터가
-// 없어서, "도착역 기준 종착역 방향 벡터"와 "출발역→도착역 방향 벡터"의 내적으로 판단 —
-// 같은 방향이면 양수가 나온다). 좌표를 못 찾거나 방향이 애매하면(음수) 포기하고 null 반환 —
-// 틀린 칸을 알려주는 것보단 안내를 생략하는 게 낫다.
-function inferTerminus(line, startStation, endStation) {
-  const candidates = [...new Set(fastTransferRows.filter((r) => r.line === line && r.terminus).map((r) => r.terminus))];
-  if (candidates.length === 0) return null;
-  if (candidates.length === 1) return candidates[0];
-
-  const startCoord = findStationCoords(startStation);
-  const endCoord = findStationCoords(endStation);
-  if (!startCoord || !endCoord) return null;
-  const dirLat = endCoord.lat - startCoord.lat;
-  const dirLng = endCoord.lng - startCoord.lng;
-
+// 두 좌표를 지나는 방향 벡터를 기준으로, 후보들(각각 좌표 조회 가능한 역 이름) 중 그 방향과
+// 가장 가까운 것을 고른다 — 실제 노선 순서 데이터가 없어서 좌표만으로 방향을 추정하는 공통
+// 로직이다(종착역 판별에도, 환승 후 방향 판별에도 같은 방식을 쓴다). 방향이 애매하면(내적이
+// 0 이하) null을 반환해서 틀린 칸을 알려주는 것보단 안내를 생략하게 한다.
+function pickByDirection(fromCoord, toCoord, candidateNames) {
+  if (!fromCoord || !toCoord) return null;
+  const dirLat = toCoord.lat - fromCoord.lat;
+  const dirLng = toCoord.lng - fromCoord.lng;
   let best = null;
   let bestScore = -Infinity;
-  for (const term of candidates) {
-    const c = findStationCoords(term);
+  for (const name of candidateNames) {
+    const c = findStationCoords(name);
     if (!c) continue;
-    const score = (c.lat - endCoord.lat) * dirLat + (c.lng - endCoord.lng) * dirLng;
+    const score = (c.lat - toCoord.lat) * dirLat + (c.lng - toCoord.lng) * dirLng;
     if (score > bestScore) {
       bestScore = score;
-      best = term;
+      best = name;
     }
   }
   return bestScore > 0 ? best : null;
+}
+
+// 이 노선을 startStation에서 endStation 방향으로 타고 있을 때, 빠른 환승 데이터의 종착역
+// 후보 중 실제로 진행 중인 방향이 어느 쪽인지 좌표로 추정한다. 일부 역은 한쪽 방향의
+// terminus 필드가 빈 문자열로 누락돼 있는데(정부 데이터 자체의 결측치, 실측 확인: 사당역
+// 4호선→2호선 남쪽 방향), 이름 있는 후보들과 방향이 반대로 나오면 그 빈 문자열 쪽이 실제로는
+// 나머지 한 방향을 가리키는 것으로 보고 시도해본다.
+function inferTerminus(line, startStation, endStation) {
+  const rowsForLine = fastTransferRows.filter((r) => r.line === line);
+  const candidates = [...new Set(rowsForLine.filter((r) => r.terminus).map((r) => r.terminus))];
+  const hasBlankTerminus = rowsForLine.some((r) => !r.terminus);
+
+  if (candidates.length === 0) return hasBlankTerminus ? "" : null;
+  if (candidates.length === 1 && !hasBlankTerminus) return candidates[0];
+
+  const startCoord = findStationCoords(startStation);
+  const endCoord = findStationCoords(endStation);
+  const picked = pickByDirection(startCoord, endCoord, candidates);
+  if (picked) return picked;
+  return hasBlankTerminus ? "" : null;
 }
 
 // 경로의 모든 지하철→지하철 환승 지점에 빠른 환승 칸·문 정보를 채워넣는다(버스가 낀 환승은
@@ -354,7 +366,12 @@ function enrichSegmentsWithBoardingSpots(segments) {
     const terminus = inferTerminus(line, seg.startStation, seg.endStation);
     if (!terminus) continue;
 
-    const hintStations = [next.startStation, next.endStation].filter(Boolean);
+    // next 하나만이 아니라 그 뒤로 남은 모든 구간의 역 이름까지 힌트로 준다 — 방향 추정에
+    // "가장 멀리 아는 지점"을 쓰므로(pickByDirection), 목적지에 가까운 역일수록 더 정확하다.
+    const hintStations = segments
+      .slice(i + 1)
+      .flatMap((s) => [s.startStation, s.endStation])
+      .filter(Boolean);
     const spot = findBoardingSpot(seg.endStation, line, terminus, normalizeLineForFastTransfer(next.line), hintStations);
     if (spot) {
       seg.boardingCar = spot.car;
@@ -379,6 +396,25 @@ function findBoardingSpot(station, line, terminus, transferLine, hintStationName
   // 방향에 따라 칸·문이 갈리는 경우 — 실제 경로에 나오는 역 이름과 afterStation이 일치하는 후보를 쓴다.
   const matched = candidates.find((c) => hintStationNames.some((name) => name && (name.includes(c.afterStation) || c.afterStation?.includes(name))));
   if (matched) return { car: matched.car, door: matched.door };
+
+  // 문자열이 직접 안 겹치면(대부분의 경우 — afterStation은 환승 후 바로 다음 역이라 실제
+  // 경로의 훨씬 나중 역과는 이름이 안 겹친다), 좌표로 방향을 추정한다: 환승역 기준으로 각
+  // 후보의 afterStation이 실제 경로가 향하는 쪽(hintStationNames 중 가장 마지막 = 가장 멀리
+  // 아는 지점)과 같은 방향인지 본다.
+  const stationCoord = findStationCoords(station);
+  const towardName = [...hintStationNames].reverse().find((name) => findStationCoords(name));
+  const towardCoord = towardName ? findStationCoords(towardName) : null;
+  if (stationCoord && towardCoord) {
+    const byDirection = pickByDirection(
+      stationCoord,
+      towardCoord,
+      candidates.map((c) => c.afterStation).filter(Boolean)
+    );
+    if (byDirection) {
+      const spot = candidates.find((c) => c.afterStation === byDirection);
+      if (spot) return { car: spot.car, door: spot.door };
+    }
+  }
 
   return null; // 방향을 확정 못 하면 틀린 칸을 알려주는 것보단 안내를 생략하는 게 낫다.
 }

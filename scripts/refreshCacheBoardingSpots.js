@@ -8,7 +8,7 @@
  */
 const fs = require("fs");
 const path = require("path");
-const { enrichSegmentsWithBoardingSpots } = require("../fastTransfer");
+const { enrichSegmentsWithBoardingSpots, enrichSegmentsWithDirectionLabels } = require("../fastTransfer");
 
 const CACHE_PATH = path.join(__dirname, "..", "data", "routeCache.json");
 
@@ -19,16 +19,17 @@ function main() {
 
   for (const key of Object.keys(cache)) {
     const route = cache[key];
-    if (!route?.available || !Array.isArray(route.segments) || route.segments.length < 2) continue;
+    if (!route?.available || !Array.isArray(route.segments) || route.segments.length < 1) continue;
     checked++;
 
     const before = JSON.stringify(route.segments);
-    enrichSegmentsWithBoardingSpots(route.segments);
+    if (route.segments.length >= 2) enrichSegmentsWithBoardingSpots(route.segments);
+    enrichSegmentsWithDirectionLabels(route.segments);
     if (JSON.stringify(route.segments) !== before) touched++;
   }
 
   fs.writeFileSync(CACHE_PATH, JSON.stringify(cache));
-  console.log(`환승 2개 이상인 캐시 ${checked}개 중 ${touched}개에 빠른 환승 정보를 새로 채웠습니다.`);
+  console.log(`지하철 구간이 있는 캐시 ${checked}개 중 ${touched}개에 빠른 환승·방면 표지판 정보를 새로 채웠습니다.`);
 }
 
 main();

@@ -140,6 +140,17 @@ function inferTerminus(station, line, startStation, endStation) {
   return hasBlankTerminus ? "" : null;
 }
 
+// 승강장에 실제로 붙어 있는 "~~행" 방면 표지판 문구를 추정한다. ODsay 기준으로 세그먼트의
+// 도착역 이름을 그대로 "OO 방향"이라고 부르면(예: "이수 방향") 실제로는 그 역 어디에도 안
+// 적혀 있는 이름이라 외국인이 표지판과 대조하지 못한다 — 정부 데이터의 terminus 필드는
+// 역·노선·방향별로 실제 현장 표기를 담고 있어서(같은 노선이라도 역마다 다르게 기록돼 있는
+// 게 그 증거) 이걸 재사용한다. 이 데이터셋은 환승 가능한 역 위주로만 있어서(일반 단순 역은
+// 없을 수 있음), 없으면 null을 반환해 호출부가 대체 문구(도착역 이름 등)를 쓰게 한다.
+function getDirectionLabel(station, line, fromStation, toStation) {
+  const label = inferTerminus(station, line, fromStation, toStation);
+  return label ? label : null; // ""(빈 문자열 종점)과 null 둘 다 "표시할 표지판 문구 없음"으로 취급
+}
+
 function findBoardingSpot(station, line, terminus, transferLine, hintStationNames = []) {
   const candidates = fastTransferRows.filter(
     (r) => stationNamesMatch(r.station, station) && r.line === line && r.terminus === terminus && r.transferLine === transferLine && r.car
@@ -205,4 +216,22 @@ function enrichSegmentsWithBoardingSpots(segments) {
   }
 }
 
-module.exports = { enrichSegmentsWithBoardingSpots, findBoardingSpot, normalizeLineForFastTransfer };
+// 경로의 모든 지하철 구간에 실제 승강장 방면 표지판 문구를 채워넣는다(버스 구간은 대상이
+// 아니다). 환승 허브가 아닌 역은 데이터가 없어 directionLabel이 안 채워질 수 있는데, 그럴 때
+// 화면에서는 세그먼트 도착역 이름으로 대체한다(표지판 문구는 아니어도 방향 정보 자체는 맞다).
+function enrichSegmentsWithDirectionLabels(segments) {
+  for (const seg of segments) {
+    if (seg.mode !== "subway") continue;
+    const line = normalizeLineForFastTransfer(seg.line);
+    const label = getDirectionLabel(seg.startStation, line, seg.startStation, seg.endStation);
+    if (label) seg.directionLabel = label;
+  }
+}
+
+module.exports = {
+  enrichSegmentsWithBoardingSpots,
+  enrichSegmentsWithDirectionLabels,
+  getDirectionLabel,
+  findBoardingSpot,
+  normalizeLineForFastTransfer,
+};

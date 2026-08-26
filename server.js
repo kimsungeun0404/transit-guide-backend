@@ -18,7 +18,12 @@ const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
-const { enrichSegmentsWithBoardingSpots, findBoardingSpot, normalizeLineForFastTransfer } = require("./fastTransfer");
+const {
+  enrichSegmentsWithBoardingSpots,
+  enrichSegmentsWithDirectionLabels,
+  findBoardingSpot,
+  normalizeLineForFastTransfer,
+} = require("./fastTransfer");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -249,6 +254,7 @@ async function fetchTransitRoute(slat, slng, dlat, dlng, preferSubway = false, d
     const totalTimeMin = Number(best.time) || 0;
     const segments = normalizeSeoulPathList(best.pathList, totalTimeMin);
     enrichSegmentsWithBoardingSpots(segments);
+    enrichSegmentsWithDirectionLabels(segments);
 
     return {
       available: true,
@@ -337,6 +343,9 @@ async function fetchIncheonAirportRoute(terminal, dlat, dlng) {
     endStation: best.stop.name,
     stationCount: terminal === "t2" ? best.stop.t2Count : best.stop.t1Count,
     minutes: best.arexMinutes,
+    // 공항에서 출발하는 AREX는 방향이 항상 서울역 방면으로 고정이라(반대편 종점 방향으로 탈 일이
+    // 없다) inferTerminus 없이 바로 확정할 수 있다 — findBoardingSpot에 쓰는 terminus="서울역"과 동일한 근거.
+    directionLabel: "서울역",
   };
 
   // 서울역에서 내리면 그 자체가 최종 도착지일 수도 있어 환승이 아닐 수 있다 — 환승이 실제로

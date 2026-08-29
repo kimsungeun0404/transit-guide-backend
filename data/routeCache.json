@@ -10316,5 +10316,2828 @@
       }
     ],
     "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.4980,127.0275,37.5239,126.9803": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 45,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "8541",
+        "startStation": "강남역11번출구",
+        "endStation": "갯마을앞",
+        "minutes": 23,
+        "startLat": 37.499278777167305,
+        "startLng": 127.02725719542512,
+        "endLat": 37.497496558440986,
+        "endLng": 126.98330677820593
+      },
+      {
+        "mode": "bus",
+        "busNo": "502",
+        "startStation": "이수교",
+        "endStation": "국립중앙박물관.용산가족공원",
+        "minutes": 23,
+        "startLat": 37.496919866822715,
+        "startLng": 126.98340869373389,
+        "endLat": 37.520825548514566,
+        "endLng": 126.97995284780724
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5239,126.9803,37.4980,127.0275": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 41,
+      "transfers": 2,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "502",
+        "startStation": "국립중앙박물관.용산가족공원",
+        "endStation": "이촌역",
+        "minutes": 5,
+        "startLat": 37.520825548514566,
+        "startLng": 126.97995284780724,
+        "endLat": 37.522617553689614,
+        "endLng": 126.97389961280214
+      },
+      {
+        "mode": "subway",
+        "line": "4호선",
+        "startStation": "이촌",
+        "endStation": "사당",
+        "stationCount": 3,
+        "minutes": 15,
+        "boardingCar": "1",
+        "boardingDoor": "1"
+      },
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "사당",
+        "endStation": "강남",
+        "stationCount": 4,
+        "minutes": 21,
+        "directionLabel": "교대(법원.검찰청)"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5345,126.9944,37.5239,126.9803": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 22,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "400",
+        "startStation": "이태원역.보광동입구",
+        "endStation": "국립중앙박물관.용산가족공원",
+        "minutes": 22,
+        "startLat": 37.533352377370605,
+        "startLng": 126.99420662609808,
+        "endLat": 37.520825548514566,
+        "endLng": 126.97995284780724
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5239,126.9803,37.5345,126.9944": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 23,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "400",
+        "startStation": "국립중앙박물관.용산가족공원",
+        "endStation": "이태원역.보광동입구",
+        "minutes": 23,
+        "startLat": 37.520843340474705,
+        "startLng": 126.97864050095919,
+        "endLat": 37.53377589377226,
+        "endLng": 126.99421790858354
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5656,127.0091,37.5239,126.9803": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 34,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "4호선",
+        "startStation": "동대문역사문화공원",
+        "endStation": "이촌",
+        "stationCount": 8,
+        "minutes": 30
+      },
+      {
+        "mode": "bus",
+        "busNo": "400",
+        "startStation": "이촌역",
+        "endStation": "국립중앙박물관.용산가족공원",
+        "minutes": 4,
+        "startLat": 37.522311207413,
+        "startLng": 126.97402416819253,
+        "endLat": 37.520843340474705,
+        "endLng": 126.97864050095919
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5239,126.9803,37.5656,127.0091": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 31,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "502",
+        "startStation": "국립중앙박물관.용산가족공원",
+        "endStation": "이촌역",
+        "minutes": 3,
+        "startLat": 37.520825548514566,
+        "startLng": 126.97995284780724,
+        "endLat": 37.522617553689614,
+        "endLng": 126.97389961280214
+      },
+      {
+        "mode": "subway",
+        "line": "4호선",
+        "startStation": "이촌",
+        "endStation": "동대문역사문화공원",
+        "stationCount": 8,
+        "minutes": 28,
+        "directionLabel": "불암산(당고개)"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5704,126.9921,37.5239,126.9803": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 35,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "1호선",
+        "startStation": "종로3가",
+        "endStation": "용산",
+        "stationCount": 5,
+        "minutes": 29
+      },
+      {
+        "mode": "bus",
+        "busNo": "502",
+        "startStation": "용산역",
+        "endStation": "국립중앙박물관.용산가족공원",
+        "minutes": 6,
+        "startLat": 37.52881505071474,
+        "startLng": 126.96581890219885,
+        "endLat": 37.520843340474705,
+        "endLng": 126.97864050095919
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5239,126.9803,37.5704,126.9921": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 36,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "502",
+        "startStation": "국립중앙박물관.용산가족공원",
+        "endStation": "서울역버스환승센터.강우규의거터",
+        "minutes": 9,
+        "startLat": 37.520825548514566,
+        "startLng": 126.97995284780724,
+        "endLat": 37.555363188558125,
+        "endLng": 126.97292612254678
+      },
+      {
+        "mode": "subway",
+        "line": "1호선",
+        "startStation": "서울",
+        "endStation": "종로3가",
+        "stationCount": 3,
+        "minutes": 27
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5552,126.9369,37.5239,126.9803": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 33,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "경의중앙선",
+        "startStation": "서강대",
+        "endStation": "이촌",
+        "stationCount": 4,
+        "minutes": 26,
+        "directionLabel": "서울역"
+      },
+      {
+        "mode": "bus",
+        "busNo": "502",
+        "startStation": "이촌역",
+        "endStation": "국립중앙박물관.용산가족공원",
+        "minutes": 7,
+        "startLat": 37.522311207413,
+        "startLng": 126.97402416819253,
+        "endLat": 37.520843340474705,
+        "endLng": 126.97864050095919
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5239,126.9803,37.5552,126.9369": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 32,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "400",
+        "startStation": "국립중앙박물관.용산가족공원",
+        "endStation": "이촌역",
+        "minutes": 6,
+        "startLat": 37.520825548514566,
+        "startLng": 126.97995284780724,
+        "endLat": 37.522617553689614,
+        "endLng": 126.97389961280214
+      },
+      {
+        "mode": "subway",
+        "line": "경의중앙선",
+        "startStation": "이촌",
+        "endStation": "서강대",
+        "stationCount": 4,
+        "minutes": 26
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5611,126.9883,37.5317,126.9716": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 20,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "4호선",
+        "startStation": "명동",
+        "endStation": "삼각지",
+        "stationCount": 4,
+        "minutes": 20
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5317,126.9716,37.5611,126.9883": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 19,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "4호선",
+        "startStation": "삼각지",
+        "endStation": "명동",
+        "stationCount": 4,
+        "minutes": 19,
+        "directionLabel": "불암산(당고개)"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5663,126.9918,37.5317,126.9716": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 22,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "100",
+        "startStation": "을지로3가",
+        "endStation": "용산우체국",
+        "minutes": 22,
+        "startLat": 37.56632318574583,
+        "startLng": 126.99025333457844,
+        "endLat": 37.53199720322841,
+        "endLng": 126.97055842584807
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5317,126.9716,37.5663,126.9918": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 22,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "100",
+        "startStation": "용산우체국",
+        "endStation": "을지로3가",
+        "minutes": 22,
+        "startLat": 37.5314474513693,
+        "startLng": 126.970230509991,
+        "endLat": 37.566088992176994,
+        "endLng": 126.9914193388369
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5567,126.9236,37.5317,126.9716": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 31,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "604",
+        "startStation": "홍대입구역",
+        "endStation": "대흥역",
+        "minutes": 8,
+        "startLat": 37.556594000280015,
+        "startLng": 126.92345165865657,
+        "endLat": 37.54806168618817,
+        "endLng": 126.94097972734548
+      },
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "대흥",
+        "endStation": "삼각지",
+        "stationCount": 3,
+        "minutes": 23
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5317,126.9716,37.5567,126.9236": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 27,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "삼각지",
+        "endStation": "합정",
+        "stationCount": 6,
+        "minutes": 23,
+        "directionLabel": "응암"
+      },
+      {
+        "mode": "bus",
+        "busNo": "M6628인천",
+        "startStation": "합정역",
+        "endStation": "홍대입구역",
+        "minutes": 4,
+        "startLat": 37.54895446927952,
+        "startLng": 126.91296811395678,
+        "endLat": 37.556594000280015,
+        "endLng": 126.92345165865657
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.4980,127.0275,37.5317,126.9716": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 39,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "강남",
+        "endStation": "사당",
+        "stationCount": 4,
+        "minutes": 17,
+        "boardingCar": "6",
+        "boardingDoor": "1",
+        "directionLabel": "교대(법원.검찰청)"
+      },
+      {
+        "mode": "subway",
+        "line": "4호선",
+        "startStation": "사당",
+        "endStation": "삼각지",
+        "stationCount": 5,
+        "minutes": 22,
+        "directionLabel": "불암산(당고개)"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5317,126.9716,37.4980,127.0275": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 38,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "4호선",
+        "startStation": "삼각지",
+        "endStation": "사당",
+        "stationCount": 5,
+        "minutes": 21,
+        "boardingCar": "1",
+        "boardingDoor": "1"
+      },
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "사당",
+        "endStation": "강남",
+        "stationCount": 4,
+        "minutes": 17,
+        "directionLabel": "교대(법원.검찰청)"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5345,126.9944,37.5317,126.9716": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 17,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "이태원",
+        "endStation": "삼각지",
+        "stationCount": 2,
+        "minutes": 17
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5317,126.9716,37.5345,126.9944": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 16,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "삼각지",
+        "endStation": "이태원",
+        "stationCount": 2,
+        "minutes": 16,
+        "directionLabel": "봉화산(서울의료원)"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5656,127.0091,37.5317,126.9716": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 21,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "4호선",
+        "startStation": "동대문역사문화공원",
+        "endStation": "삼각지",
+        "stationCount": 6,
+        "minutes": 21
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5317,126.9716,37.5656,127.0091": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 21,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "4호선",
+        "startStation": "삼각지",
+        "endStation": "동대문역사문화공원",
+        "stationCount": 6,
+        "minutes": 21,
+        "directionLabel": "불암산(당고개)"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5704,126.9921,37.5317,126.9716": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 25,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "1호선",
+        "startStation": "종로3가",
+        "endStation": "서울",
+        "stationCount": 3,
+        "minutes": 19
+      },
+      {
+        "mode": "bus",
+        "busNo": "750B",
+        "startStation": "서울역버스환승센터",
+        "endStation": "용산우체국",
+        "minutes": 6,
+        "startLat": 37.55535409927242,
+        "startLng": 126.97258657056392,
+        "endLat": 37.53199720322841,
+        "endLng": 126.97055842584807
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5317,126.9716,37.5704,126.9921": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 23,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "502",
+        "startStation": "용산우체국",
+        "endStation": "용산역",
+        "minutes": 4,
+        "startLat": 37.53199720322841,
+        "startLng": 126.97055842584807,
+        "endLat": 37.52881505071474,
+        "endLng": 126.96581890219885
+      },
+      {
+        "mode": "subway",
+        "line": "1호선",
+        "startStation": "용산",
+        "endStation": "종로3가",
+        "stationCount": 5,
+        "minutes": 19
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5552,126.9369,37.5317,126.9716": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 28,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "마포10",
+        "startStation": "신촌역교차로",
+        "endStation": "대흥역",
+        "minutes": 7,
+        "startLat": 37.55443027998506,
+        "startLng": 126.93683218230484,
+        "endLat": 37.54802568196281,
+        "endLng": 126.94105897753151
+      },
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "대흥",
+        "endStation": "삼각지",
+        "stationCount": 3,
+        "minutes": 21
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5317,126.9716,37.5552,126.9369": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 28,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "삼각지",
+        "endStation": "대흥",
+        "stationCount": 3,
+        "minutes": 21,
+        "directionLabel": "응암"
+      },
+      {
+        "mode": "bus",
+        "busNo": "7613",
+        "startStation": "대흥역",
+        "endStation": "신촌로터리",
+        "minutes": 7,
+        "startLat": 37.54763001338196,
+        "startLng": 126.94271162070186,
+        "endLat": 37.55347534374057,
+        "endLng": 126.93725176260905
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5611,126.9883,37.5737,126.9627": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 26,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "604",
+        "startStation": "퇴계로2가.명동역7번출구",
+        "endStation": "남대문시장.회현역",
+        "minutes": 13,
+        "startLat": 37.560943151718256,
+        "startLng": 126.98533011616544,
+        "endLat": 37.558220665594064,
+        "endLng": 126.97775827719417
+      },
+      {
+        "mode": "bus",
+        "busNo": "705",
+        "startStation": "남대문시장.회현역",
+        "endStation": "영천시장",
+        "minutes": 13,
+        "startLat": 37.558220665594064,
+        "startLng": 126.97775827719417,
+        "endLat": 37.56948066453753,
+        "endLng": 126.963128654091
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5737,126.9627,37.5611,126.9883": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 27,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "3호선",
+        "startStation": "독립문",
+        "endStation": "충무로",
+        "stationCount": 5,
+        "minutes": 23,
+        "boardingCar": "8",
+        "boardingDoor": "4"
+      },
+      {
+        "mode": "subway",
+        "line": "4호선",
+        "startStation": "충무로",
+        "endStation": "명동",
+        "stationCount": 1,
+        "minutes": 5
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5663,126.9918,37.5737,126.9627": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 21,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "3호선",
+        "startStation": "을지로3가",
+        "endStation": "독립문",
+        "stationCount": 4,
+        "minutes": 21
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5737,126.9627,37.5663,126.9918": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 19,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "3호선",
+        "startStation": "독립문",
+        "endStation": "을지로3가",
+        "stationCount": 4,
+        "minutes": 19
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5567,126.9236,37.5737,126.9627": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 23,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "7737",
+        "startStation": "홍대입구역",
+        "endStation": "독립문역.서대문형무소역사관",
+        "minutes": 23,
+        "startLat": 37.556594000280015,
+        "startLng": 126.92345165865657,
+        "endLat": 37.57334509419086,
+        "endLng": 126.9593114939887
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5737,126.9627,37.5567,126.9236": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 19,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "1200고양",
+        "startStation": "독립문고가차도(미정차)",
+        "endStation": "연세대앞",
+        "minutes": 10,
+        "startLat": 37.57188581292945,
+        "startLng": 126.960750056214,
+        "endLat": 37.56010644614091,
+        "endLng": 126.93549172169526
+      },
+      {
+        "mode": "bus",
+        "busNo": "M6724인천",
+        "startStation": "연세대학교앞",
+        "endStation": "홍대입구역",
+        "minutes": 10,
+        "startLat": 37.55977293646033,
+        "startLng": 126.93529958324841,
+        "endLat": 37.55727937839838,
+        "endLng": 126.92429986737032
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.4980,127.0275,37.5737,126.9627": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 44,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "강남",
+        "endStation": "교대",
+        "stationCount": 1,
+        "minutes": 3,
+        "boardingCar": "1",
+        "boardingDoor": "1",
+        "directionLabel": "교대(법원.검찰청)"
+      },
+      {
+        "mode": "subway",
+        "line": "3호선",
+        "startStation": "교대",
+        "endStation": "독립문",
+        "stationCount": 14,
+        "minutes": 41
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5737,126.9627,37.4980,127.0275": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 44,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "3호선",
+        "startStation": "독립문",
+        "endStation": "교대",
+        "stationCount": 14,
+        "minutes": 41,
+        "boardingCar": "2",
+        "boardingDoor": "1"
+      },
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "교대",
+        "endStation": "강남",
+        "stationCount": 1,
+        "minutes": 3,
+        "directionLabel": "강남"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5345,126.9944,37.5737,126.9627": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 31,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "이태원",
+        "endStation": "삼각지",
+        "stationCount": 2,
+        "minutes": 21
+      },
+      {
+        "mode": "bus",
+        "busNo": "750B",
+        "startStation": "삼각지역.전쟁기념관",
+        "endStation": "서대문독립공원·극동아파트",
+        "minutes": 10,
+        "startLat": 37.5351337595946,
+        "startLng": 126.97368025758361,
+        "endLat": 37.57180422794309,
+        "endLng": 126.95931233231356
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5737,126.9627,37.5345,126.9944": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 31,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "752",
+        "startStation": "영천시장",
+        "endStation": "삼각지역.전쟁기념관",
+        "minutes": 10,
+        "startLat": 37.56989497788242,
+        "startLng": 126.96252845227453,
+        "endLat": 37.535935841024354,
+        "endLng": 126.97415522976561
+      },
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "삼각지",
+        "endStation": "이태원",
+        "stationCount": 2,
+        "minutes": 21,
+        "directionLabel": "봉화산(서울의료원)"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5656,127.0091,37.5737,126.9627": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 27,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "4호선",
+        "startStation": "동대문역사문화공원",
+        "endStation": "회현",
+        "stationCount": 3,
+        "minutes": 20
+      },
+      {
+        "mode": "bus",
+        "busNo": "705",
+        "startStation": "남대문시장.회현역",
+        "endStation": "영천시장",
+        "minutes": 7,
+        "startLat": 37.558220665594064,
+        "startLng": 126.97775827719417,
+        "endLat": 37.56948066453753,
+        "endLng": 126.963128654091
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5737,126.9627,37.5656,127.0091": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 27,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "3호선",
+        "startStation": "독립문",
+        "endStation": "충무로",
+        "stationCount": 5,
+        "minutes": 23,
+        "boardingCar": "8",
+        "boardingDoor": "1"
+      },
+      {
+        "mode": "subway",
+        "line": "4호선",
+        "startStation": "충무로",
+        "endStation": "동대문역사문화공원",
+        "stationCount": 1,
+        "minutes": 5,
+        "directionLabel": "불암산(당고개)"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5704,126.9921,37.5737,126.9627": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 21,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "3호선",
+        "startStation": "종로3가",
+        "endStation": "독립문",
+        "stationCount": 3,
+        "minutes": 21
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5737,126.9627,37.5704,126.9921": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 19,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "3호선",
+        "startStation": "독립문",
+        "endStation": "종로3가",
+        "stationCount": 3,
+        "minutes": 19
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5552,126.9369,37.5737,126.9627": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 23,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "1004김포",
+        "startStation": "신촌오거리.현대백화점",
+        "endStation": "독립문고가차도(미정차)",
+        "minutes": 23,
+        "startLat": 37.55534888315206,
+        "startLng": 126.93588065233106,
+        "endLat": 37.57188581292945,
+        "endLng": 126.960750056214
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5737,126.9627,37.5552,126.9369": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 21,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "1200고양",
+        "startStation": "독립문고가차도(미정차)",
+        "endStation": "연세대앞",
+        "minutes": 11,
+        "startLat": 37.57188581292945,
+        "startLng": 126.960750056214,
+        "endLat": 37.56010644614091,
+        "endLng": 126.93549172169526
+      },
+      {
+        "mode": "bus",
+        "busNo": "7728",
+        "startStation": "연세대학교앞",
+        "endStation": "연세로.스타광장",
+        "minutes": 11,
+        "startLat": 37.55977293646033,
+        "startLng": 126.93529958324841,
+        "endLat": 37.55635857803074,
+        "endLng": 126.93675132394623
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5611,126.9883,37.5345,126.9944": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 23,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "4호선",
+        "startStation": "명동",
+        "endStation": "삼각지",
+        "stationCount": 4,
+        "minutes": 15,
+        "boardingCar": "10",
+        "boardingDoor": "4"
+      },
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "삼각지",
+        "endStation": "이태원",
+        "stationCount": 2,
+        "minutes": 8,
+        "directionLabel": "봉화산(서울의료원)"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5345,126.9944,37.5611,126.9883": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 23,
+      "transfers": 2,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "이태원",
+        "endStation": "약수",
+        "stationCount": 3,
+        "minutes": 12,
+        "boardingCar": "1",
+        "boardingDoor": "1"
+      },
+      {
+        "mode": "subway",
+        "line": "3호선",
+        "startStation": "약수",
+        "endStation": "충무로",
+        "stationCount": 2,
+        "minutes": 8,
+        "boardingCar": "3",
+        "boardingDoor": "3"
+      },
+      {
+        "mode": "subway",
+        "line": "4호선",
+        "startStation": "충무로",
+        "endStation": "명동",
+        "stationCount": 1,
+        "minutes": 4
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5663,126.9918,37.5345,126.9944": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 19,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "3호선",
+        "startStation": "을지로3가",
+        "endStation": "약수",
+        "stationCount": 3,
+        "minutes": 10,
+        "boardingCar": "7",
+        "boardingDoor": "1",
+        "directionLabel": "수서"
+      },
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "약수",
+        "endStation": "이태원",
+        "stationCount": 3,
+        "minutes": 10,
+        "directionLabel": "응암"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5345,126.9944,37.5663,126.9918": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 18,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "이태원",
+        "endStation": "약수",
+        "stationCount": 3,
+        "minutes": 9,
+        "boardingCar": "1",
+        "boardingDoor": "1"
+      },
+      {
+        "mode": "subway",
+        "line": "3호선",
+        "startStation": "약수",
+        "endStation": "을지로3가",
+        "stationCount": 3,
+        "minutes": 9
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.4980,127.0275,37.5345,126.9944": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 30,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "421",
+        "startStation": "지하철2호선강남역",
+        "endStation": "이태원역.보광동입구",
+        "minutes": 30,
+        "startLat": 37.50072975508096,
+        "startLng": 127.02636421247736,
+        "endLat": 37.53377589377226,
+        "endLng": 126.99421790858354
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5345,126.9944,37.4980,127.0275": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 31,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "400",
+        "startStation": "이태원역.보광동입구",
+        "endStation": "신분당선강남역",
+        "minutes": 31,
+        "startLat": 37.53377589377226,
+        "startLng": 126.99421790858354,
+        "endLat": 37.49579120702928,
+        "endLng": 127.02853390280387
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5345,126.9944,37.5345,126.9944": {
+    "available": false,
+    "reason": "too_close",
+    "walkable": true,
+    "walkMeters": 3,
+    "walkMinutes": 1
+  },
+  "37.5656,127.0091,37.5345,126.9944": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 19,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "2014",
+        "startStation": "광희동.동대문역사문화공원역",
+        "endStation": "중구보건소.충무아트센터",
+        "minutes": 3,
+        "startLat": 37.56536807907684,
+        "startLng": 127.00910129958882,
+        "endLat": 37.564971029141255,
+        "endLng": 127.01473859346746
+      },
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "신당",
+        "endStation": "이태원",
+        "stationCount": 5,
+        "minutes": 16,
+        "directionLabel": "응암"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5345,126.9944,37.5656,127.0091": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 20,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "이태원",
+        "endStation": "청구",
+        "stationCount": 4,
+        "minutes": 16,
+        "boardingCar": "6",
+        "boardingDoor": "2"
+      },
+      {
+        "mode": "subway",
+        "line": "5호선",
+        "startStation": "청구",
+        "endStation": "동대문역사문화공원",
+        "stationCount": 1,
+        "minutes": 4,
+        "directionLabel": "방화"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5704,126.9921,37.5345,126.9944": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 21,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "3호선",
+        "startStation": "종로3가",
+        "endStation": "약수",
+        "stationCount": 4,
+        "minutes": 12,
+        "boardingCar": "7",
+        "boardingDoor": "1",
+        "directionLabel": "수서"
+      },
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "약수",
+        "endStation": "이태원",
+        "stationCount": 3,
+        "minutes": 9,
+        "directionLabel": "응암"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5345,126.9944,37.5704,126.9921": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 21,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "이태원",
+        "endStation": "약수",
+        "stationCount": 3,
+        "minutes": 9,
+        "boardingCar": "1",
+        "boardingDoor": "1"
+      },
+      {
+        "mode": "subway",
+        "line": "3호선",
+        "startStation": "약수",
+        "endStation": "종로3가",
+        "stationCount": 4,
+        "minutes": 12
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5552,126.9369,37.5345,126.9944": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 22,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "마포10",
+        "startStation": "신촌역교차로",
+        "endStation": "대흥역",
+        "minutes": 4,
+        "startLat": 37.55443027998506,
+        "startLng": 126.93683218230484,
+        "endLat": 37.54802568196281,
+        "endLng": 126.94105897753151
+      },
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "대흥",
+        "endStation": "이태원",
+        "stationCount": 5,
+        "minutes": 18
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5345,126.9944,37.5552,126.9369": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 22,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "이태원",
+        "endStation": "대흥",
+        "stationCount": 5,
+        "minutes": 18
+      },
+      {
+        "mode": "bus",
+        "busNo": "7613",
+        "startStation": "대흥역",
+        "endStation": "신촌로터리",
+        "minutes": 4,
+        "startLat": 37.54763001338196,
+        "startLng": 126.94271162070186,
+        "endLat": 37.55347534374057,
+        "endLng": 126.93725176260905
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5611,126.9883,37.5125,127.1028": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 42,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "4호선",
+        "startStation": "명동",
+        "endStation": "동대문역사문화공원",
+        "stationCount": 2,
+        "minutes": 6,
+        "boardingCar": "1",
+        "boardingDoor": "1"
+      },
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "동대문역사문화공원",
+        "endStation": "잠실",
+        "stationCount": 11,
+        "minutes": 36,
+        "directionLabel": "신당"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5125,127.1028,37.5611,126.9883": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 40,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "잠실",
+        "endStation": "동대문역사문화공원",
+        "stationCount": 11,
+        "minutes": 34,
+        "boardingCar": "2",
+        "boardingDoor": "4",
+        "directionLabel": "선릉"
+      },
+      {
+        "mode": "subway",
+        "line": "4호선",
+        "startStation": "동대문역사문화공원",
+        "endStation": "명동",
+        "stationCount": 2,
+        "minutes": 6
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5663,126.9918,37.5125,127.1028": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 33,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "을지로3가",
+        "endStation": "잠실",
+        "stationCount": 13,
+        "minutes": 33,
+        "directionLabel": "을지로4가"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5125,127.1028,37.5663,126.9918": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 32,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "잠실",
+        "endStation": "을지로3가",
+        "stationCount": 13,
+        "minutes": 32,
+        "directionLabel": "선릉"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5567,126.9236,37.5125,127.1028": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 55,
+      "transfers": 2,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "홍대입구",
+        "endStation": "충정로",
+        "stationCount": 4,
+        "minutes": 11,
+        "boardingCar": "7",
+        "boardingDoor": "3",
+        "directionLabel": "충정로(경기대입구)"
+      },
+      {
+        "mode": "subway",
+        "line": "5호선",
+        "startStation": "충정로",
+        "endStation": "을지로4가",
+        "stationCount": 4,
+        "minutes": 11,
+        "boardingCar": "1",
+        "boardingDoor": "1",
+        "directionLabel": "강동"
+      },
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "을지로4가",
+        "endStation": "잠실",
+        "stationCount": 12,
+        "minutes": 33
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5125,127.1028,37.5567,126.9236": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 54,
+      "transfers": 2,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "잠실",
+        "endStation": "을지로4가",
+        "stationCount": 12,
+        "minutes": 32,
+        "boardingCar": "7",
+        "boardingDoor": "2",
+        "directionLabel": "선릉"
+      },
+      {
+        "mode": "subway",
+        "line": "5호선",
+        "startStation": "을지로4가",
+        "endStation": "충정로",
+        "stationCount": 4,
+        "minutes": 11,
+        "boardingCar": "4",
+        "boardingDoor": "1",
+        "directionLabel": "방화"
+      },
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "충정로",
+        "endStation": "홍대입구",
+        "stationCount": 4,
+        "minutes": 11,
+        "directionLabel": "홍대입구"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.4980,127.0275,37.5125,127.1028": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 21,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "강남",
+        "endStation": "잠실",
+        "stationCount": 6,
+        "minutes": 21,
+        "directionLabel": "선릉"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5125,127.1028,37.4980,127.0275": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 20,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "잠실",
+        "endStation": "강남",
+        "stationCount": 6,
+        "minutes": 20,
+        "directionLabel": "선릉"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5345,126.9944,37.5125,127.1028": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 43,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "이태원",
+        "endStation": "신당",
+        "stationCount": 5,
+        "minutes": 14,
+        "boardingCar": "8",
+        "boardingDoor": "2"
+      },
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "신당",
+        "endStation": "잠실",
+        "stationCount": 10,
+        "minutes": 29,
+        "directionLabel": "왕십리"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5125,127.1028,37.5345,126.9944": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 43,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "잠실",
+        "endStation": "신당",
+        "stationCount": 10,
+        "minutes": 29,
+        "boardingCar": "1",
+        "boardingDoor": "1",
+        "directionLabel": "건대입구"
+      },
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "신당",
+        "endStation": "이태원",
+        "stationCount": 5,
+        "minutes": 14,
+        "directionLabel": "응암"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5656,127.0091,37.5125,127.1028": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 29,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "동대문역사문화공원",
+        "endStation": "잠실",
+        "stationCount": 11,
+        "minutes": 29,
+        "directionLabel": "신당"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5125,127.1028,37.5656,127.0091": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 28,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "잠실",
+        "endStation": "동대문역사문화공원",
+        "stationCount": 11,
+        "minutes": 28,
+        "directionLabel": "선릉"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5704,126.9921,37.5125,127.1028": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 41,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "을지로3가",
+        "endStation": "잠실",
+        "stationCount": 13,
+        "minutes": 41,
+        "directionLabel": "을지로4가"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5125,127.1028,37.5704,126.9921": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 40,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "잠실",
+        "endStation": "을지로3가",
+        "stationCount": 13,
+        "minutes": 40,
+        "directionLabel": "선릉"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5552,126.9369,37.5125,127.1028": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 54,
+      "transfers": 2,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "신촌",
+        "endStation": "충정로",
+        "stationCount": 3,
+        "minutes": 9,
+        "boardingCar": "7",
+        "boardingDoor": "3"
+      },
+      {
+        "mode": "subway",
+        "line": "5호선",
+        "startStation": "충정로",
+        "endStation": "을지로4가",
+        "stationCount": 4,
+        "minutes": 11,
+        "boardingCar": "1",
+        "boardingDoor": "1",
+        "directionLabel": "강동"
+      },
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "을지로4가",
+        "endStation": "잠실",
+        "stationCount": 12,
+        "minutes": 34
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5125,127.1028,37.5552,126.9369": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 52,
+      "transfers": 2,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "잠실",
+        "endStation": "을지로4가",
+        "stationCount": 12,
+        "minutes": 33,
+        "boardingCar": "7",
+        "boardingDoor": "2",
+        "directionLabel": "선릉"
+      },
+      {
+        "mode": "subway",
+        "line": "5호선",
+        "startStation": "을지로4가",
+        "endStation": "충정로",
+        "stationCount": 4,
+        "minutes": 11,
+        "boardingCar": "4",
+        "boardingDoor": "1",
+        "directionLabel": "방화"
+      },
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "충정로",
+        "endStation": "신촌",
+        "stationCount": 3,
+        "minutes": 8,
+        "directionLabel": "홍대입구"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5611,126.9883,37.5119,127.0589": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 47,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "4호선",
+        "startStation": "명동",
+        "endStation": "동대문역사문화공원",
+        "stationCount": 2,
+        "minutes": 31
+      },
+      {
+        "mode": "bus",
+        "busNo": "301",
+        "startStation": "동대문역사문화공원역8번출구",
+        "endStation": "무역센터",
+        "minutes": 16,
+        "startLat": 37.565007773271674,
+        "startLng": 127.00719950082181,
+        "endLat": 37.511971674822604,
+        "endLng": 127.06106192895167
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5119,127.0589,37.5611,126.9883": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 31,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "9호선",
+        "startStation": "봉은사",
+        "endStation": "신논현",
+        "stationCount": 4,
+        "minutes": 25
+      },
+      {
+        "mode": "bus",
+        "busNo": "3201광주",
+        "startStation": "교보타워사거리(미정차)",
+        "endStation": "국가인권위.안중근활동터",
+        "minutes": 6,
+        "startLat": 37.50430745694307,
+        "startLng": 127.02486113442112,
+        "endLat": 37.56430451445179,
+        "endLng": 126.98784246669379
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5663,126.9918,37.5119,127.0589": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 39,
+      "transfers": 2,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "을지로3가",
+        "endStation": "왕십리",
+        "stationCount": 5,
+        "minutes": 18,
+        "directionLabel": "을지로4가"
+      },
+      {
+        "mode": "subway",
+        "line": "분당선",
+        "startStation": "왕십리",
+        "endStation": "선정릉",
+        "stationCount": 4,
+        "minutes": 14
+      },
+      {
+        "mode": "subway",
+        "line": "9호선",
+        "startStation": "선정릉",
+        "endStation": "봉은사",
+        "stationCount": 2,
+        "minutes": 7,
+        "directionLabel": "종합운동장"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5119,127.0589,37.5663,126.9918": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 32,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "9호선",
+        "startStation": "봉은사",
+        "endStation": "신논현",
+        "stationCount": 4,
+        "minutes": 26
+      },
+      {
+        "mode": "bus",
+        "busNo": "3201광주",
+        "startStation": "교보타워사거리(미정차)",
+        "endStation": "국가인권위.안중근활동터",
+        "minutes": 6,
+        "startLat": 37.50430745694307,
+        "startLng": 127.02486113442112,
+        "endLat": 37.56430451445179,
+        "endLng": 126.98784246669379
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5567,126.9236,37.5119,127.0589": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 47,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "홍대입구",
+        "endStation": "당산",
+        "stationCount": 2,
+        "minutes": 5,
+        "boardingCar": "7",
+        "boardingDoor": "1",
+        "directionLabel": "합정"
+      },
+      {
+        "mode": "subway",
+        "line": "9호선",
+        "startStation": "당산",
+        "endStation": "봉은사",
+        "stationCount": 16,
+        "minutes": 42,
+        "directionLabel": "중앙보훈병원"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5119,127.0589,37.5567,126.9236": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 47,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "9호선",
+        "startStation": "봉은사",
+        "endStation": "당산",
+        "stationCount": 16,
+        "minutes": 42
+      },
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "당산",
+        "endStation": "홍대입구",
+        "stationCount": 2,
+        "minutes": 5,
+        "directionLabel": "합정"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.4980,127.0275,37.5119,127.0589": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 22,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "P9601퇴양주",
+        "startStation": "삼성서초역삼세무서",
+        "endStation": "삼성역7번출구",
+        "minutes": 22,
+        "startLat": 37.49835904069725,
+        "startLng": 127.02979027884456,
+        "endLat": 37.51225968594344,
+        "endLng": 127.06171825939647
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5119,127.0589,37.4980,127.0275": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 21,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "8146",
+        "startStation": "무역센터",
+        "endStation": "강남역9번출구",
+        "minutes": 21,
+        "startLat": 37.511971674822604,
+        "startLng": 127.06106192895167,
+        "endLat": 37.497729029878364,
+        "endLng": 127.02660066338223
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5345,126.9944,37.5119,127.0589": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 41,
+      "transfers": 3,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "이태원",
+        "endStation": "청구",
+        "stationCount": 4,
+        "minutes": 13,
+        "boardingCar": "6",
+        "boardingDoor": "2"
+      },
+      {
+        "mode": "subway",
+        "line": "5호선",
+        "startStation": "청구",
+        "endStation": "왕십리",
+        "stationCount": 3,
+        "minutes": 9,
+        "directionLabel": "강동"
+      },
+      {
+        "mode": "subway",
+        "line": "분당선",
+        "startStation": "왕십리",
+        "endStation": "선정릉",
+        "stationCount": 4,
+        "minutes": 13
+      },
+      {
+        "mode": "subway",
+        "line": "9호선",
+        "startStation": "선정릉",
+        "endStation": "봉은사",
+        "stationCount": 2,
+        "minutes": 6,
+        "directionLabel": "종합운동장"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5119,127.0589,37.5345,126.9944": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 41,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "9호선",
+        "startStation": "봉은사",
+        "endStation": "신논현",
+        "stationCount": 4,
+        "minutes": 33
+      },
+      {
+        "mode": "bus",
+        "busNo": "421",
+        "startStation": "논현역",
+        "endStation": "이태원역.보광동입구",
+        "minutes": 8,
+        "startLat": 37.506317148811014,
+        "startLng": 127.02371937966241,
+        "endLat": 37.53377589377226,
+        "endLng": 126.99421790858354
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5656,127.0091,37.5119,127.0589": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 34,
+      "transfers": 2,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "동대문역사문화공원",
+        "endStation": "왕십리",
+        "stationCount": 3,
+        "minutes": 11,
+        "directionLabel": "신당"
+      },
+      {
+        "mode": "subway",
+        "line": "분당선",
+        "startStation": "왕십리",
+        "endStation": "선정릉",
+        "stationCount": 4,
+        "minutes": 15
+      },
+      {
+        "mode": "subway",
+        "line": "9호선",
+        "startStation": "선정릉",
+        "endStation": "봉은사",
+        "stationCount": 2,
+        "minutes": 8,
+        "directionLabel": "종합운동장"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5119,127.0589,37.5656,127.0091": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 37,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "2413",
+        "startStation": "삼성역7번출구",
+        "endStation": "뚝섬역2번출구",
+        "minutes": 6,
+        "startLat": 37.51225968594344,
+        "startLng": 127.06171825939647,
+        "endLat": 37.54752648768432,
+        "endLng": 127.04684240959618
+      },
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "뚝섬",
+        "endStation": "동대문역사문화공원",
+        "stationCount": 5,
+        "minutes": 31
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5704,126.9921,37.5119,127.0589": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 42,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "3호선",
+        "startStation": "종로3가",
+        "endStation": "금호",
+        "stationCount": 5,
+        "minutes": 35,
+        "directionLabel": "수서"
+      },
+      {
+        "mode": "bus",
+        "busNo": "301",
+        "startStation": "금호역",
+        "endStation": "무역센터",
+        "minutes": 7,
+        "startLat": 37.54849893696292,
+        "startLng": 127.01547098513396,
+        "endLat": 37.511971674822604,
+        "endLng": 127.06106192895167
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5119,127.0589,37.5704,126.9921": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 39,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "343",
+        "startStation": "삼성역7번출구",
+        "endStation": "압구정역3번출구",
+        "minutes": 5,
+        "startLat": 37.51225968594344,
+        "startLng": 127.06171825939647,
+        "endLat": 37.525951013024134,
+        "endLng": 127.02871509759382
+      },
+      {
+        "mode": "subway",
+        "line": "3호선",
+        "startStation": "압구정",
+        "endStation": "종로3가",
+        "stationCount": 7,
+        "minutes": 34
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5552,126.9369,37.5119,127.0589": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 48,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "신촌",
+        "endStation": "당산",
+        "stationCount": 3,
+        "minutes": 8,
+        "boardingCar": "7",
+        "boardingDoor": "1"
+      },
+      {
+        "mode": "subway",
+        "line": "9호선",
+        "startStation": "당산",
+        "endStation": "봉은사",
+        "stationCount": 16,
+        "minutes": 40,
+        "directionLabel": "중앙보훈병원"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5119,127.0589,37.5552,126.9369": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 47,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "9호선",
+        "startStation": "봉은사",
+        "endStation": "당산",
+        "stationCount": 16,
+        "minutes": 40
+      },
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "당산",
+        "endStation": "신촌",
+        "stationCount": 3,
+        "minutes": 7,
+        "directionLabel": "합정"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5611,126.9883,37.5156,127.0572": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 46,
+      "transfers": 2,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "4호선",
+        "startStation": "명동",
+        "endStation": "충무로",
+        "stationCount": 1,
+        "minutes": 7,
+        "boardingCar": "5",
+        "boardingDoor": "1"
+      },
+      {
+        "mode": "subway",
+        "line": "3호선",
+        "startStation": "충무로",
+        "endStation": "압구정",
+        "stationCount": 5,
+        "minutes": 33,
+        "directionLabel": "수서"
+      },
+      {
+        "mode": "bus",
+        "busNo": "343",
+        "startStation": "압구정역3번출구",
+        "endStation": "봉은사.삼성1파출소앞",
+        "minutes": 7,
+        "startLat": 37.525951013024134,
+        "startLng": 127.02871509759382,
+        "endLat": 37.51491910306279,
+        "endLng": 127.05943534507603
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5156,127.0572,37.5611,126.9883": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 32,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "9호선",
+        "startStation": "봉은사",
+        "endStation": "신논현",
+        "stationCount": 4,
+        "minutes": 26
+      },
+      {
+        "mode": "bus",
+        "busNo": "3201광주",
+        "startStation": "교보타워사거리(미정차)",
+        "endStation": "국가인권위.안중근활동터",
+        "minutes": 6,
+        "startLat": 37.50430745694307,
+        "startLng": 127.02486113442112,
+        "endLat": 37.56430451445179,
+        "endLng": 126.98784246669379
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5663,126.9918,37.5156,127.0572": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 37,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "3호선",
+        "startStation": "을지로3가",
+        "endStation": "압구정",
+        "stationCount": 6,
+        "minutes": 32,
+        "directionLabel": "수서"
+      },
+      {
+        "mode": "bus",
+        "busNo": "343",
+        "startStation": "압구정역3번출구",
+        "endStation": "봉은사.삼성1파출소앞",
+        "minutes": 5,
+        "startLat": 37.525951013024134,
+        "startLng": 127.02871509759382,
+        "endLat": 37.51491910306279,
+        "endLng": 127.05943534507603
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5156,127.0572,37.5663,126.9918": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 33,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "9호선",
+        "startStation": "봉은사",
+        "endStation": "신논현",
+        "stationCount": 4,
+        "minutes": 26
+      },
+      {
+        "mode": "bus",
+        "busNo": "3201광주",
+        "startStation": "교보타워사거리(미정차)",
+        "endStation": "국가인권위.안중근활동터",
+        "minutes": 7,
+        "startLat": 37.50430745694307,
+        "startLng": 127.02486113442112,
+        "endLat": 37.56430451445179,
+        "endLng": 126.98784246669379
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5567,126.9236,37.5156,127.0572": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 47,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "홍대입구",
+        "endStation": "당산",
+        "stationCount": 2,
+        "minutes": 5,
+        "boardingCar": "7",
+        "boardingDoor": "1",
+        "directionLabel": "합정"
+      },
+      {
+        "mode": "subway",
+        "line": "9호선",
+        "startStation": "당산",
+        "endStation": "봉은사",
+        "stationCount": 16,
+        "minutes": 42,
+        "directionLabel": "중앙보훈병원"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5156,127.0572,37.5567,126.9236": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 47,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "9호선",
+        "startStation": "봉은사",
+        "endStation": "당산",
+        "stationCount": 16,
+        "minutes": 42
+      },
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "당산",
+        "endStation": "홍대입구",
+        "stationCount": 2,
+        "minutes": 5,
+        "directionLabel": "합정"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.4980,127.0275,37.5156,127.0572": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 24,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "740",
+        "startStation": "강남역1번출구.역삼세무서",
+        "endStation": "선릉역",
+        "minutes": 12,
+        "startLat": 37.49824207206983,
+        "startLng": 127.02908901963336,
+        "endLat": 37.50470479289979,
+        "endLng": 127.05045773685373
+      },
+      {
+        "mode": "bus",
+        "busNo": "G3202광주",
+        "startStation": "선릉역",
+        "endStation": "봉은사.코엑스북문",
+        "minutes": 12,
+        "startLat": 37.50470479289979,
+        "startLng": 127.05045773685373,
+        "endLat": 37.51349625633435,
+        "endLng": 127.05763557952864
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5156,127.0572,37.4980,127.0275": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 22,
+      "transfers": 0,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "146",
+        "startStation": "봉은사.삼성1파출소앞",
+        "endStation": "강남역9번출구",
+        "minutes": 22,
+        "startLat": 37.51491910306279,
+        "startLng": 127.05943534507603,
+        "endLat": 37.497729029878364,
+        "endLng": 127.02660066338223
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5345,126.9944,37.5156,127.0572": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 41,
+      "transfers": 3,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "6호선",
+        "startStation": "이태원",
+        "endStation": "청구",
+        "stationCount": 4,
+        "minutes": 13,
+        "boardingCar": "6",
+        "boardingDoor": "2"
+      },
+      {
+        "mode": "subway",
+        "line": "5호선",
+        "startStation": "청구",
+        "endStation": "왕십리",
+        "stationCount": 3,
+        "minutes": 9,
+        "directionLabel": "강동"
+      },
+      {
+        "mode": "subway",
+        "line": "분당선",
+        "startStation": "왕십리",
+        "endStation": "선정릉",
+        "stationCount": 4,
+        "minutes": 13
+      },
+      {
+        "mode": "subway",
+        "line": "9호선",
+        "startStation": "선정릉",
+        "endStation": "봉은사",
+        "stationCount": 2,
+        "minutes": 6,
+        "directionLabel": "종합운동장"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5156,127.0572,37.5345,126.9944": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 41,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "9호선",
+        "startStation": "봉은사",
+        "endStation": "신논현",
+        "stationCount": 4,
+        "minutes": 33
+      },
+      {
+        "mode": "bus",
+        "busNo": "421",
+        "startStation": "논현역",
+        "endStation": "이태원역.보광동입구",
+        "minutes": 8,
+        "startLat": 37.506317148811014,
+        "startLng": 127.02371937966241,
+        "endLat": 37.53377589377226,
+        "endLng": 126.99421790858354
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5656,127.0091,37.5156,127.0572": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 35,
+      "transfers": 2,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "동대문역사문화공원",
+        "endStation": "왕십리",
+        "stationCount": 3,
+        "minutes": 12,
+        "directionLabel": "신당"
+      },
+      {
+        "mode": "subway",
+        "line": "분당선",
+        "startStation": "왕십리",
+        "endStation": "선정릉",
+        "stationCount": 4,
+        "minutes": 16
+      },
+      {
+        "mode": "subway",
+        "line": "9호선",
+        "startStation": "선정릉",
+        "endStation": "봉은사",
+        "stationCount": 2,
+        "minutes": 8,
+        "directionLabel": "종합운동장"
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5156,127.0572,37.5656,127.0091": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 35,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "bus",
+        "busNo": "2413",
+        "startStation": "봉은사역3번출구.삼성1파출소",
+        "endStation": "뚝섬역2번출구",
+        "minutes": 6,
+        "startLat": 37.51505390153448,
+        "startLng": 127.06015944676066,
+        "endLat": 37.54752648768432,
+        "endLng": 127.04684240959618
+      },
+      {
+        "mode": "subway",
+        "line": "2호선",
+        "startStation": "뚝섬",
+        "endStation": "동대문역사문화공원",
+        "stationCount": 5,
+        "minutes": 29
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
   }
 }

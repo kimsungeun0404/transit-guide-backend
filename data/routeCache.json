@@ -13603,5 +13603,36 @@
       }
     ],
     "source": "서울시 대중교통환승경로 조회 서비스"
+  },
+  "37.5704,126.9921,37.5156,127.0572": {
+    "available": true,
+    "summary": {
+      "totalTimeMin": 39,
+      "transfers": 1,
+      "fare": null
+    },
+    "segments": [
+      {
+        "mode": "subway",
+        "line": "3호선",
+        "startStation": "종로3가",
+        "endStation": "압구정",
+        "stationCount": 7,
+        "minutes": 34,
+        "directionLabel": "수서"
+      },
+      {
+        "mode": "bus",
+        "busNo": "343",
+        "startStation": "압구정역3번출구",
+        "endStation": "봉은사.삼성1파출소앞",
+        "minutes": 5,
+        "startLat": 37.525951013024134,
+        "startLng": 127.02871509759382,
+        "endLat": 37.51491910306279,
+        "endLng": 127.05943534507603
+      }
+    ],
+    "source": "서울시 대중교통환승경로 조회 서비스"
   }
 }
